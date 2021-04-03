@@ -1,1 +1,2 @@
-# suicide_in_brazil
+## Suicide cases in Brasil
+#### Analysis of suicide cases in Brasil
