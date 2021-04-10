@@ -72,6 +72,7 @@ df %<>%
       contador,
       ORIGEM,
       TIPOBITO,
+      CIRCOBITO,
       HORAOBITO,
       CODBAIRES,
       CODESTAB,
@@ -146,4 +147,4 @@ df %<>%
   )
 
 # Saving as .csv ====
-write.csv(df, 'suicides_brazil_2010_2019.csv')
+write.csv(df, 'total_datasus_2010_2019.csv')
