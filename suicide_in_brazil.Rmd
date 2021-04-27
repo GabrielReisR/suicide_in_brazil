@@ -110,7 +110,7 @@ yearly_variation$index <- parse_date_time(c(2011:2019), '%Y')
 yearly_variation %>% 
   
   # Plot
-  ggplot(aes(x = as.Date(index), y = year_variation, fill = index)) +
+  ggplot(aes(x = as.Date(index), y = year_variation, fill = '#f68060')) +
   
   # Geom
   geom_col() +
@@ -122,15 +122,15 @@ yearly_variation %>%
   scale_y_continuous(breaks = seq(0, 10, 2.5), limits = c(0, 10)) +
   
   # X-axis: Colors
-  scale_fill_gradient2(low = 'darkgreen', mid = 'snow3', high = 'red') +
+ # scale_fill_gradient2(low = 'darkgreen', mid = 'snow3', high = 'red') +
   
   # Labels
   labs(x = '',
        y = 'Variação em Relação ao Ano Anterior (%)',
-       title = 'Variação Percentual no Número de Casos\nRegistrados de Suicídio no Brasil por Ano') +
+       title = 'Variação Percentual no Número de Casos Registrados de Suicídio no Brasil por Ano') +
   
   # Annotations
-  annotate(geom = "text", x = as.Date("2014-01-01"), y = 9,
+  annotate(geom = "text", x = as.Date("2014-06-01"), y = 9,
            label = "Em 2017, houve um aumento de 9.31% de\ncasos de suicídio em comparação a 2016.") +
   
   # Theme
@@ -147,8 +147,56 @@ yearly_variation %>%
 
 ### Visualização da série histórica
 
-![Quadrantes do RStudio](D:/Data Science/Projetos/suicide_in_brazil/suicides_across_years.gif)
+![](D:/Data Science/Projetos/suicide_in_brazil/suicides_across_years.gif)
 
 ### Suicídios por sexo
 
-![Quadrantes do RStudio](D:/Data Science/Projetos/suicide_in_brazil/suicides_by_sex_by_year.gif)
+![](D:/Data Science/Projetos/suicide_in_brazil/suicides_by_sex_by_year.gif)
+
+## Ocupações
+
+### Suicídios por ocupações
+![](D:/Data Science/Projetos/suicide_in_brazil/suicides_by_ocup.gif)
+
+### Suicídios de estudantes
+```{r student_suicide, echo = F, dpi = 500}
+df %>%
+  
+  # Cleaning
+  filter(OCUP != 'NA') %>% 
+  
+  mutate(ano = as.factor(ano)) %>% 
+  
+  group_by(ano) %>% 
+  
+  count() %>%
+  
+  # Plot
+  ggplot(aes(x = ano, y = n)) +
+  
+  # Geom
+  geom_bar(stat="identity", fill="#f68060", width = .8) +
+  
+  # Labels
+  labs(x = '',
+       y = 'Número de Mortes',
+       title = 'Número de Suicídios de Estudantes ao Longo dos Anos') +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  theme_bw() +
+  
+  # Removing legend title
+  theme(legend.position = "none") + 
+  
+  # Removing legend title
+  theme(legend.position = "none",
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.border = element_blank())
+```
+

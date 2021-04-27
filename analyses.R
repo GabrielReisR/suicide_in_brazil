@@ -1,6 +1,7 @@
 # Initializing ====
 # Loading libraries
 library(dplyr)
+library(forcats)
 library(gganimate)
 library(ggplot2)
 library(ggthemes)
@@ -8,8 +9,10 @@ library(gifski)
 library(hrbrthemes)
 library(lubridate)
 library(magrittr)
+library(microdatasus)
 library(plotly)
 library(psych)
+library(stringr)
 library(viridis)
 
 df <- read.csv('df.csv', encoding = 'UTF-8')[-1]
@@ -25,6 +28,11 @@ df$DTNASC <- parse_date_time(df$DTNASC, format)
 
 # Creating 'month' column
 df$mes <- month(df$DTOBITO)
+
+# Organizing ocupations ====
+df$OCUP %<>% as.factor
+
+df$OCUP[str_detect(df$OCUP, "\\d")] <- NA
 
 # Creating only number of deaths dataframes by month/year ====
 year_total <- df %>% group_by(ano) %>% count()
@@ -86,7 +94,7 @@ suicides_across_years <-
   ggplot(aes(x = as.Date(index), y = n)) +
   
   # Geom
-  geom_line(size = 1) +
+  geom_line(size = 1, colour = '#f68060') +
   
   # X-axis: Limits and ticks
   scale_x_date(date_breaks = 'years', date_labels = '%Y') +
@@ -131,7 +139,6 @@ p <- animate(suicides_across_years,
 
 anim_save("suicides_across_years.gif", p)
 
-
 # Visualizing variation in suicides through time: bar plot ====
 yearly_variation <- as.data.frame(year_variation * 100)
 yearly_variation$index <- parse_date_time(c(2011:2019), '%Y')
@@ -140,7 +147,7 @@ suicide_var_by_year <-
   yearly_variation %>% 
   
   # Plot
-  ggplot(aes(x = as.Date(index), y = year_variation, fill = index)) +
+  ggplot(aes(x = as.Date(index), y = year_variation, fill = '#f68060')) +
   
   # Geom
   geom_col() +
@@ -152,7 +159,7 @@ suicide_var_by_year <-
   scale_y_continuous(breaks = seq(0, 10, 2.5), limits = c(0, 10)) +
   
   # X-axis: Colors
-  scale_fill_gradient2(low = 'darkgreen', mid = 'snow3', high = 'red') +
+ # scale_fill_gradient2(low = 'darkgreen', mid = 'snow3', high = 'red') +
   
   # Labels
   labs(x = '',
@@ -235,3 +242,121 @@ p <- animate(sex_by_year,
 
 anim_save("suicides_by_sex_by_year.gif", p)
 
+# Visualizing suicides by ocupations: bar plot ====
+suicides_by_ocup <-
+  
+  df %>%
+  
+  # Cleaning
+  filter(OCUP != 'NA') %>% 
+  
+  mutate(ano = as.factor(ano)) %>% 
+  
+  group_by(ano, OCUP) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>% 
+  
+  top_n(n = 10) %>% #TODO: fix this
+  
+  mutate(order = 1:n()) %>% 
+  
+  # Plot
+  
+  ggplot(aes(x = fct_reorder(as.factor(order), n), y = n, group = OCUP)) +
+  
+  # Geom
+  geom_tile(aes(y = n/2, 
+                height = n,
+                width = 0.9), fill = "#f68060") +
+  
+  # X-axis: Label
+  geom_text(aes(y = 1400, label = OCUP), vjust = -1) +
+  
+  coord_cartesian(clip = "off", expand = T) +
+  
+  # Y-axis
+  scale_y_continuous(breaks = seq(0, 1750, 250),
+                     limits = c(0, 1750)) +
+  
+  # Labels
+  labs(x = '',
+       y = 'Número de Mortes por Profissão',
+       title = 'Número de Mortes de Acordo com a Profissão',
+       subtitle = 'Ano: {closest_state}') +
+  
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  theme_bw() +
+  
+  # Removing legend title
+  theme(legend.position = "none") + 
+  
+  # Removing legend title
+  theme(legend.position = "none",
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.border = element_blank()) +
+  
+  # Transition
+  transition_states(ano)
+
+p <- animate(suicides_by_ocup, 
+             # end_pause indicates the amount to be paused after ending
+             duration = 15,
+             start_pause = 3,
+             end_pause = 3,
+             renderer = gifski_renderer(),
+             width = 1000,
+             height = 600)
+
+anim_save("suicides_by_ocup.gif", p)
+
+# Visualizing student suicides ====
+student_suicides <-
+  df %>%
+  
+  # Cleaning
+  filter(OCUP != 'NA') %>% 
+  
+  mutate(ano = as.factor(ano)) %>% 
+  
+  group_by(ano) %>% 
+  
+  count() %>%
+  
+  # Plot
+  ggplot(aes(x = ano, y = n)) +
+  
+  # Geom
+  geom_bar(stat="identity", fill="#f68060", width = .8) +
+  
+  # Labels
+  labs(x = '',
+       y = 'Número de Mortes',
+       title = 'Número de Suicídios de Estudantes ao Longo dos Anos') +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  theme_bw() +
+  
+  # Removing legend title
+  theme(legend.position = "none") + 
+  
+  # Removing legend title
+  theme(legend.position = "none",
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.border = element_blank())
+
+student_suicides
