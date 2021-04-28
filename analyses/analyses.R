@@ -15,7 +15,7 @@ library(psych)
 library(stringr)
 library(viridis)
 
-df <- read.csv('df.csv', encoding = 'UTF-8')[-1]
+df <- read.csv('data\\df.csv', encoding = 'UTF-8')[-1]
 
 # Initial cleaning ====
 # Making missings known
@@ -33,6 +33,42 @@ df$mes <- month(df$DTOBITO)
 df$OCUP %<>% as.factor
 
 df$OCUP[str_detect(df$OCUP, "\\d")] <- NA
+
+# Organizing education and mother's education ====
+df$ESC %<>% as.factor
+df$ESC <- factor(df$ESC,
+                 levels = c('Nenhuma',
+                            '1 a 3 anos',
+                            '4 a 7 anos',
+                            '8 a 11 anos',
+                            '12 e mais'))
+
+df$ESCMAE %<>% as.factor
+df$ESCMAE <- factor(df$ESC,
+                 levels = c('1 a 3 anos',
+                            '4 a 7 anos',
+                            '8 a 11 anos',
+                            '12 e mais'))
+
+# Organizing race/color ====
+df$RACACOR %<>% as.factor
+
+# Organizing medical assistance ====
+df$ASSISTMED %<>% as.factor
+
+# Organizing marital status ====
+df$ESTCIV %<>% as.factor
+df$ESTCIV <- factor(df$ESTCIV,
+                    levels = c('Solteiro',
+                               'União consensual',
+                               'Casado',
+                               'Separado judicialmente',
+                               'Viúvo'))
+
+levels(df$ESTCIV)[1] <- 'Solteiro/a'
+levels(df$ESTCIV)[3] <- 'Casado/a'
+levels(df$ESTCIV)[4] <- 'Separado/a judicialmente'
+levels(df$ESTCIV)[5] <- 'Viúvo/a'
 
 # Creating only number of deaths dataframes by month/year ====
 year_total <- df %>% group_by(ano) %>% count()
@@ -282,8 +318,8 @@ suicides_by_ocup <-
   
   # Labels
   labs(x = '',
-       y = 'Número de Mortes por Profissão',
-       title = 'Número de Mortes de Acordo com a Profissão',
+       y = 'Número de Mortes',
+       title = 'Número de Suicídos Registrados por Ocupação/Profissão',
        subtitle = 'Ano: {closest_state}') +
   
   

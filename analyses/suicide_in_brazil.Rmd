@@ -1,7 +1,7 @@
 ---
 title: "Suicídio no Brasil"
 author: "Gabriel R. R."
-date: "4/15/2021"
+date: "4/28/2021"
 output: 
   html_document:
     toc: true
@@ -26,9 +26,10 @@ library(lubridate)
 library(magrittr)
 library(plotly)
 library(psych)
+library(stringr)
 library(viridis)
 
-df <- read.csv('df.csv', encoding = 'UTF-8')[-1]
+df <- read.csv('data\\df.csv', encoding = 'UTF-8')[-1]
 
 # Initial cleaning ====
 # Making missings known
@@ -96,8 +97,8 @@ head(ym_variation, n = 20)
 Os dados foram extraídos utilizando-se a ferramenta [PySUS](https://github.com/AlertaDengue/PySUS),
 seguindo-se o tutorial descrito [aqui](https://medium.com/psicodata/baixando-e-processando-dados-do-datasus-sobre-suic%C3%ADdio-com-python-656afa17f6ad?source=friends_link&sk=4e94866d21707aefec13aafe5923d6f1).
 Foram baixados os dados de 2010 a 2019, contemplando 10 anos de uma série histórica. Os dados foram pré-processados em Python, podendo todos os procedimentos iniciais de pré-processamento
-serem verificados [neste link](). As análises subsequentes foram realizadas em R, conforme é descrito
-nesse documento.
+serem verificados [neste link](https://github.com/GabrielReisR/suicide_in_brazil/blob/main/getting_pysus_data_2010_2019.ipynb). As análises subsequentes foram realizadas em R, conforme é descrito
+[nesse documento aqui](https://github.com/GabrielReisR/suicide_in_brazil/blob/main/analyses.R).
 
 Qualquer dúvida, comentário ou retificação podem ser enviadas para reisrgabriel@gmail.com
 
@@ -130,7 +131,7 @@ yearly_variation %>%
        title = 'Variação Percentual no Número de Casos Registrados de Suicídio no Brasil por Ano') +
   
   # Annotations
-  annotate(geom = "text", x = as.Date("2014-06-01"), y = 9,
+  annotate(geom = "text", x = as.Date("2014-01-01"), y = 9,
            label = "Em 2017, houve um aumento de 9.31% de\ncasos de suicídio em comparação a 2016.") +
   
   # Theme
@@ -147,16 +148,47 @@ yearly_variation %>%
 
 ### Visualização da série histórica
 
-![](D:/Data Science/Projetos/suicide_in_brazil/suicides_across_years.gif)
+![](D:/Data Science/Projetos/suicide_in_brazil/figures/suicides_across_years.gif) 
 
 ### Suicídios por sexo
 
-![](D:/Data Science/Projetos/suicide_in_brazil/suicides_by_sex_by_year.gif)
+Em geral, os homens cometem mais suicídios que as mulheres no Brasil. O número absoluto de suicídios registrados em homens foi de 88394 para homens (78,58%) e 24075	para mulheres (21,40%).
+
+```{r tabela de sexo por ano, echo = F}
+df %>% 
+  group_by(ano, SEXO) %>% 
+  count()
+```
+
+![](D:/Data Science/Projetos/suicide_in_brazil/figures/suicides_by_sex_by_year.gif)
 
 ## Ocupações
 
+Desde 2010 até 2019, apenas 10 profissões/ocupações estão presentes no topo dos casos de suicídio. Em números absolutos, a ordem de suicídios por profissão é a seguinte:
+
+```{r tabela de ocupacoes por ano, echo = F}
+df$OCUP %<>% as.factor
+
+df$OCUP[str_detect(df$OCUP, "\\d")] <- NA
+
+df %>%
+  
+  # Cleaning
+  filter(OCUP != 'NA') %>% 
+  
+  group_by(OCUP) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>% 
+  
+  mutate(ordem = 1:n())
+```
+
+Por ano, percebe-se uma evolução no número de casos registrados de suicídios por estudantes. Separando-se apenas as 10 profissões mais relevantes a cada ano, a ordem é a seguinte:
+
 ### Suicídios por ocupações
-![](D:/Data Science/Projetos/suicide_in_brazil/suicides_by_ocup.gif)
+![](D:/Data Science/Projetos/suicide_in_brazil/figures/suicides_by_ocup.gif) 
 
 ### Suicídios de estudantes
 ```{r student_suicide, echo = F, dpi = 500}

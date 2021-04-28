@@ -1,0 +1,11 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/760870/ebc72bb2aeda45858a381c2f6cf1c733
+bundleId: https://api.rpubs.com/api/v1/document/760870/ebc72bb2aeda45858a381c2f6cf1c733
+url: http://rpubs.com/reisrgabriel/760870
+when: 1619558462.53487
+lastSyncTime: 1619558462.53487
