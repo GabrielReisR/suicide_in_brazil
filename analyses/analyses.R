@@ -29,34 +29,24 @@ df$DTNASC <- parse_date_time(df$DTNASC, format)
 # Creating 'month' column
 df$mes <- month(df$DTOBITO)
 
-# Organizing ocupations ====
-df$OCUP %<>% as.factor
+# Sex as factor
+df$SEXO %<>% as.factor
 
-df$OCUP[str_detect(df$OCUP, "\\d")] <- NA
-
-# Organizing education and mother's education ====
-df$ESC %<>% as.factor
-df$ESC <- factor(df$ESC,
-                 levels = c('Nenhuma',
-                            '1 a 3 anos',
-                            '4 a 7 anos',
-                            '8 a 11 anos',
-                            '12 e mais'))
-
-df$ESCMAE %<>% as.factor
-df$ESCMAE <- factor(df$ESC,
-                 levels = c('1 a 3 anos',
-                            '4 a 7 anos',
-                            '8 a 11 anos',
-                            '12 e mais'))
-
-# Organizing race/color ====
+# Race/color as factor
 df$RACACOR %<>% as.factor
 
-# Organizing medical assistance ====
+# Medical assistance as factor
 df$ASSISTMED %<>% as.factor
 
-# Organizing marital status ====
+# Mother's education as factor
+df$ESCMAE %<>% as.factor
+df$ESCMAE <- factor(df$ESC,
+                    levels = c('1 a 3 anos',
+                               '4 a 7 anos',
+                               '8 a 11 anos',
+                               '12 e mais'))
+
+# Marital status as factor
 df$ESTCIV %<>% as.factor
 df$ESTCIV <- factor(df$ESTCIV,
                     levels = c('Solteiro',
@@ -69,6 +59,50 @@ levels(df$ESTCIV)[1] <- 'Solteiro/a'
 levels(df$ESTCIV)[3] <- 'Casado/a'
 levels(df$ESTCIV)[4] <- 'Separado/a judicialmente'
 levels(df$ESTCIV)[5] <- 'Viúvo/a'
+
+# Education as factor
+df$ESC %<>% as.factor
+df$ESC <- factor(df$ESC,
+                 levels = c('Nenhuma',
+                            '1 a 3 anos',
+                            '4 a 7 anos',
+                            '8 a 11 anos',
+                            '12 e mais'))
+
+# Ocupation as factor
+df$OCUP %<>% as.factor
+
+df$OCUP[str_detect(df$OCUP, "\\d")] <- NA
+#' This last function corrects a problem found in the data.
+#' A lot of occupations were not coded correctly by the CBO.
+#' The reason why this happened is unclear.
+#' This resulted in various data points containing 'random' numbers,
+#' such as '1021', '11112' and '14221'. This should be an ocupation,
+#' however, I can't seem to find the code for it, and the CBO isn't
+#' covering this properly. If you know something about this, feel free
+#' to contact me.
+#' 
+#' What the code does is the following:
+#' Detect in `df$OCUP` any string that contains numbers (`\\d` in regex).
+#' When you find this, replace with `NA` (`<- NA`)
+
+# Place of occurence as factor ====
+df$LOCOCOR[df$LOCOCOR == '6'] <- NA #' There isn't code for '6': replace with NA
+df$LOCOCOR %<>% as.factor
+
+# Received surgery (yes/no) as factor ====
+df$CIRURGIA %<>% as.factor
+
+# Visualizing demographics: sex ====
+# Visualizing demographis: race/color ====
+# Visualizing demographis: medical assistance ====
+# Visualizing demographis: education ====
+# Visualizing demographis: mother's education ====
+# Visualizing demographis: marital status ====
+# Visualizing demographis: ocupation ====
+# Visualizing demographis: surgery (yes/no) ====
+# Visualizing demographis: where did it occur? ====
+
 
 # Creating only number of deaths dataframes by month/year ====
 year_total <- df %>% group_by(ano) %>% count()
@@ -220,8 +254,6 @@ suicide_var_by_year <-
 suicide_var_by_year
 
 # Visualizing sex: bar plot ====
-df$SEXO %<>% as.factor
-
 sex_by_year <- 
   
   df %>%
