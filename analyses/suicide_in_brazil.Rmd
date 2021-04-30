@@ -13,6 +13,162 @@ output:
 ---
 ## Suicídio no Brasil
 
+```{r setup and pre_processing, warning = FALSE, message = FALSE, echo = FALSE}
+# Loading libraries
+library("dplyr")
+library("forcats")
+library("gganimate")
+library("ggplot2")
+library("ggthemes")
+library("gifski")
+library("hrbrthemes")
+library("lubridate")
+library("magrittr")
+library("plotly")
+library("psych")
+library("scales")
+library("stringr")
+library("viridis")
+
+# Getting data
+df <- read.csv('D:\\Data Science\\Projetos\\suicide_in_brazil\\data\\df.csv', encoding = 'UTF-8')[-1]
+
+# Setting theme
+project_theme <- 
+  theme_minimal() + 
+  theme(legend.position = "none",
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      panel.grid.major.y = element_blank(),
+      axis.ticks.x = element_blank(),
+      panel.border = element_blank(),
+      plot.title = element_text(size = 16),
+      plot.subtitle = element_text(size = 15),
+      axis.text = element_text(size = 12),
+      axis.title = element_text(size = 14))
+
+# Making missings known
+df[df == 'NaN'] <- NA
+
+# Arranging dates
+format <- "%d%m%Y"
+df$DTOBITO <- parse_date_time(df$DTOBITO, format)
+df$DTNASC <- parse_date_time(df$DTNASC, format)
+
+# Creating 'month' column
+df$mes <- month(df$DTOBITO)
+
+# Sex as factor
+df$SEXO %<>% as.factor
+
+# Race/color as factor
+df$RACACOR %<>% as.factor
+
+# Medical assistance as factor
+df$ASSISTMED %<>% as.factor
+
+# Mother's education as factor
+df$ESCMAE %<>% as.factor
+df$ESCMAE <- factor(df$ESC,
+                    levels = c('1 a 3 anos',
+                               '4 a 7 anos',
+                               '8 a 11 anos',
+                               '12 e mais'))
+
+# Marital status as factor
+df$ESTCIV %<>% as.factor
+df$ESTCIV <- factor(df$ESTCIV,
+                    levels = c('Solteiro',
+                               'União consensual',
+                               'Casado',
+                               'Separado judicialmente',
+                               'Viúvo'))
+
+levels(df$ESTCIV)[1] <- 'Solteiro/a'
+levels(df$ESTCIV)[3] <- 'Casado/a'
+levels(df$ESTCIV)[4] <- 'Separado/a judicialmente'
+levels(df$ESTCIV)[5] <- 'Viúvo/a'
+
+# Education as factor
+df$ESC %<>% as.factor
+df$ESC <- factor(df$ESC,
+                 levels = c('Nenhuma',
+                            '1 a 3 anos',
+                            '4 a 7 anos',
+                            '8 a 11 anos',
+                            '12 e mais'))
+
+# Ocupation as factor
+df$OCUP %<>% as.factor
+
+df$OCUP[str_detect(df$OCUP, "\\d")] <- NA
+#' This last function corrects a problem found in the data.
+#' A lot of occupations were not coded correctly by the CBO.
+#' The reason why this happened is unclear.
+#' This resulted in various data points containing 'random' numbers,
+#' such as '1021', '11112' and '14221'. This should be an ocupation,
+#' however, I can't seem to find the code for it, and the CBO isn't
+#' covering this properly. If you know something about this, feel free
+#' to contact me.
+#' 
+#' What the code does is the following:
+#' Detect in `df$OCUP` any string that contains numbers (`\\d` in regex).
+#' When you find this, replace with `NA` (`<- NA`)
+
+# Place of occurence as factor
+df$LOCOCOR[df$LOCOCOR == '6'] <- NA #' There isn't code for '6': replace with NA
+df$LOCOCOR %<>% as.factor
+
+# Received surgery (yes/no) as factor
+df$CIRURGIA %<>% as.factor
+
+# Creating dataframes with number of deaths by month/year
+year_total <- df %>% group_by(ano) %>% count()
+
+month_total <- df %>% group_by(mes) %>% count()
+
+ym_total <- df %>% 
+  group_by(ano, mes) %>% 
+  count() %>% 
+  tidyr::unite(mes, ano, col = 'index', sep = '-')
+
+# Creating variations in percentage from one time period to another
+#' *year_variation*
+year_variation <- as.data.frame(year_total)
+rownames(year_variation) <- year_variation$ano
+year_variation %<>% select(-ano)
+
+year_variation <- as.ts(year_variation, start = c(2010), frequency = 1)
+
+year_variation <- year_variation/stats::lag(year_variation, -1) - 1
+
+year_variation <- as.data.frame(year_variation)
+#' *month variation*
+month_variation <- as.data.frame(month_total)
+rownames(month_variation) <- month_variation$mes
+month_variation %<>% select(-mes)
+
+month_variation <- as.ts(month_variation, start = c(1), frequency = 1)
+
+month_variation <- month_variation/stats::lag(month_variation, -1) - 1
+
+month_variation <- as.data.frame(month_variation)
+
+#' *ym_variation*
+ym_variation <- as.data.frame(ym_total)
+rownames(ym_variation) <- ym_variation$index
+ym_variation %<>% select(-index)
+rownames(ym_variation) <- NULL
+
+ym_variation <- as.ts(ym_variation, start = c(2010, 1), frequency = 12)
+
+ym_variation <- ym_variation/stats::lag(ym_variation, -1) - 1
+
+ym_variation <- as.data.frame(ym_variation)
+
+```
+
+
 ### Extração de dados
 Os dados foram extraídos utilizando-se a ferramenta [PySUS](https://github.com/AlertaDengue/PySUS),
 seguindo-se o tutorial descrito [aqui](https://medium.com/psicodata/baixando-e-processando-dados-do-datasus-sobre-suic%C3%ADdio-com-python-656afa17f6ad?source=friends_link&sk=4e94866d21707aefec13aafe5923d6f1).
@@ -70,44 +226,6 @@ Por ano, percebe-se uma evolução no número de casos registrados de suicídios
 ![](D:/Data Science/Projetos/suicide_in_brazil/figures/suicides_by_ocup.gif) 
 
 ### Suicídios de estudantes
-```{r student_suicide, echo = F, dpi = 500}
-df %>%
-  
-  # Cleaning
-  filter(OCUP != 'NA') %>% 
-  
-  mutate(ano = as.factor(ano)) %>% 
-  
-  group_by(ano) %>% 
-  
-  count() %>%
-  
-  # Plot
-  ggplot(aes(x = ano, y = n)) +
-  
-  # Geom
-  geom_bar(stat="identity", fill="#f68060", width = .8) +
-  
-  # Labels
-  labs(x = '',
-       y = 'Número de Mortes',
-       title = 'Número de Suicídios de Estudantes ao Longo dos Anos') +
-  
-  # Flipping coordinates
-  coord_flip() +
-  
-  # Theme
-  theme_bw() +
-  
-  # Removing legend title
-  theme(legend.position = "none") + 
-  
-  # Removing legend title
-  theme(legend.position = "none",
-        panel.grid.minor.x = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.y = element_blank(),
-        axis.ticks.x = element_blank(),
-        panel.border = element_blank())
-```
+![](D:/Data Science/Projetos/suicide_in_brazil/figures/student_suicides.png)
+
 

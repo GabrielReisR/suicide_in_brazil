@@ -12,12 +12,16 @@ if (!require("ggthemes"))
   install.packages("ggthemes")
 if(!require("gifski"))
   install.packages("gifski")
+if(!require("highcharter"))
+  install.packages("highcharter")
 if(!require("hrbrthemes"))
   install.packages("hrbrthemes")
 if(!require("lubridate"))
   install.packages("lubridate")
 if(!require("magrittr"))
   install.packages("magrittr")
+if(!require("maps"))
+  install.packages("maps")
 if(!require("plotly"))
   install.packages("plotly")
 if(!require("psych"))
@@ -28,6 +32,8 @@ if(!require("stringr"))
   install.packages("stringr")
 if(!require("viridis"))
   install.packages("viridis")
+if(!require("WDI"))
+  install.packages("WDI")
 
 # Getting data
 df <- read.csv('data\\df.csv', encoding = 'UTF-8')[-1]
@@ -62,9 +68,12 @@ df$mes <- month(df$DTOBITO)
 df$SEXO %<>% as.factor
 
 # Race/color as factor
+df$RACACOR[df$RACACOR == ''] <- NA
 df$RACACOR %<>% as.factor
 
+
 # Medical assistance as factor
+df$ASSISTMED[df$ASSISTMED == ''] <- NA
 df$ASSISTMED %<>% as.factor
 
 # Mother's education as factor
@@ -120,6 +129,7 @@ df$LOCOCOR[df$LOCOCOR == '6'] <- NA #' There isn't code for '6': replace with NA
 df$LOCOCOR %<>% as.factor
 
 # Received surgery (yes/no) as factor
+df$CIRURGIA[df$CIRURGIA == ''] <- NA
 df$CIRURGIA %<>% as.factor
 
 # Creating dataframes with number of deaths by month/year ====
@@ -170,8 +180,6 @@ ym_variation <- ym_variation/stats::lag(ym_variation, -1) - 1
 
 ym_variation <- as.data.frame(ym_variation)
 
-# plot.ts(year_variation)
-
 # Visualizing demographics: sex ====
 sex_by_year <- 
   
@@ -189,13 +197,15 @@ sex_by_year <-
   
   # Y-axis: Limits and ticks
   scale_y_continuous(breaks = c(0, 2500, 5000, 7500, 10000),
-                     limits = c(0, 11000)) +
+                     limits = c(0, 11000),
+                     fill = '#f68060') +
   
   # Labels
   labs(x = 'Sexo',
        y = 'Número de Suicídios Registrados',
-       title = 'Número de Suicídios por Sexo Registrados no Brasil',
-       subtitle = 'Ano: {closest_state}') +
+       title = 'Número de Suicídios Registrados por Sexo no Brasil',
+       subtitle = 'Ano: {closest_state}',
+       caption = 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.') +
   
   # Theme
   project_theme +
@@ -205,21 +215,259 @@ sex_by_year <-
 
 p <- animate(sex_by_year, 
              # end_pause indicates the amount to be paused after ending
-             duration = 30,
+             duration = 20,
              start_pause = 3,
              end_pause = 3,
              renderer = gifski_renderer(),
-             width = 600,
-             height = 600)
+             width = 750,
+             height = 750)
 
 anim_save("figures\\suicides_by_sex_by_year.gif", p)
 
 # Visualizing demographis: race/color ====
+suicides_by_race <- 
+  
+  df %>% 
+  # Cleaning
+  
+  filter(RACACOR != 'NA') %>%
+  
+  group_by(RACACOR) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>%
+  
+  # Plot
+  ggplot(aes(x = reorder(RACACOR, n), y = n, fill = '#f68060')) +
+  
+  # Geom
+  geom_tile(aes(y = n/2, 
+                height = n,
+                width = 0.9), fill = "#f68060") +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 60000, 10000),
+                     limits = c(0, 60000)) +
+  
+  # Labels
+  labs(x = 'Raça/cor',
+       y = 'Número de Suicídios Registrados',
+       title = 'Número de Suicídios Registrados por Raça/Cor no Brasil',
+       caption = 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.') +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  project_theme
+
+suicides_by_race
+
 # Visualizing demographis: medical assistance ====
+suicides_medical_assistance <- 
+  
+  df %>% 
+  # Cleaning
+  
+  filter(ASSISTMED != 'NA') %>%
+  
+  group_by(ASSISTMED) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>%
+  
+  # Plot
+  ggplot(aes(x = reorder(ASSISTMED, n), y = n, fill = '#f68060')) +
+  
+  # Geom
+  geom_tile(aes(y = n/2, 
+                height = n,
+                width = 0.9), fill = "#f68060") +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 60000, 10000),
+                     limits = c(0, 60000)) +
+  
+  # Labels
+  labs(x = 'Recebeu assistência médica?',
+       y = 'Número de Suicídios Registrados',
+       title = 'Número de Suicídios Registrados que Receberam Assistência Médica no Brasil',
+       caption = 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.') +
+  
+  # Theme
+  project_theme +
+  
+  theme(panel.grid.major.x = element_blank())
+
+suicides_medical_assistance
+
 # Visualizing demographis: education ====
+suicides_by_education <- 
+  
+  df %>% 
+  # Cleaning
+  
+  filter(ESC != 'NA') %>%
+  
+  group_by(ESC) %>% 
+  
+  summarize(n = n()) %>%
+  
+  #arrange(desc(n), .by_group = T) %>%
+  
+  # Plot
+  ggplot(aes(x = ESC, y = n, fill = '#f68060')) +
+  
+  # Geom
+  geom_tile(aes(y = n/2, 
+                height = n,
+                width = 0.9), fill = "#f68060") +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 60000, 10000),
+                     limits = c(0, 60000)) +
+  
+  # Labels
+  labs(x = 'Escolaridade',
+       y = 'Número de Suicídios Registrados',
+       title = 'Número de Suicídios Registrados por Escolaridade no Brasil',
+       caption = 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.') +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  project_theme
+
+suicides_by_education
+
 # Visualizing demographis: mother's education ====
+suicides_by_mothers_education <- 
+  
+  df %>% 
+  # Cleaning
+  
+  filter(ESCMAE != 'NA') %>%
+  
+  group_by(ESCMAE) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>%
+  
+  # Plot
+  ggplot(aes(x = ESCMAE, y = n, fill = '#f68060')) +
+  
+  # Geom
+  geom_tile(aes(y = n/2, 
+                height = n,
+                width = 0.9), fill = "#f68060") +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 60000, 10000),
+                     limits = c(0, 60000)) +
+  
+  # Labels
+  labs(x = 'Escolaridade da Mãe',
+       y = 'Número de Suicídios Registrados',
+       title = 'Número de Suicídios Registrados por Escolaridade da Mãe no Brasil',
+       caption = 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.') +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  project_theme
+
+suicides_by_mothers_education
+
 # Visualizing demographis: marital status ====
-# Visualizing demographis: ocupation ====
+suicides_by_marital_status <- 
+  
+  df %>% 
+  # Cleaning
+  
+  filter(ESTCIV != 'NA') %>%
+  
+  group_by(ESTCIV) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>%
+  
+  # Plot
+  ggplot(aes(x = fct_reorder(ESTCIV, n), y = n, fill = '#f68060')) +
+  
+  # Geom
+  geom_tile(aes(y = n/2, 
+                height = n,
+                width = 0.9), fill = "#f68060") +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 60000, 10000),
+                     limits = c(0, 60000)) +
+  
+  # Labels
+  labs(x = 'Escolaridade da Mãe',
+       y = 'Número de Suicídios Registrados',
+       title = 'Número de Suicídios Registrados por Escolaridade da Mãe no Brasil',
+       caption = 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.') +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  project_theme
+
+suicides_by_marital_status
+
+# Visualizing demographis: ocupation - Pt. 1 ====
+suicides_by_ocup_img <-
+  
+  df %>%
+  
+  # Cleaning
+  filter(OCUP != 'NA') %>% 
+  
+  group_by(OCUP) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>% 
+  
+  top_n(n = 20) %>%
+  
+  # Plot
+  
+  ggplot(aes(x = fct_reorder(as.factor(OCUP), n), y = n, group = OCUP)) +
+  
+  # Geom
+  geom_tile(aes(y = n/2, 
+                height = n,
+                width = 0.9), fill = "#f68060") +
+  
+  # Y-axis
+  scale_y_continuous(breaks = seq(0, 8000, 2000),
+                     limits = c(0, 8000)) +
+  
+  # Labels
+  labs(x = '',
+       y = 'Número de Mortes',
+       title = 'Número de Suicídos Registrados por Ocupação/Profissão',
+       caption = 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.') +
+  
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  project_theme
+
+suicides_by_ocup_img
+
+# Visualizing demographis: ocupation - Pt. 2 ====
 suicides_by_ocup <-
   
   df %>%
@@ -261,7 +509,8 @@ suicides_by_ocup <-
   labs(x = '',
        y = 'Número de Mortes',
        title = 'Número de Suicídos Registrados por Ocupação/Profissão',
-       subtitle = 'Ano: {closest_state}') +
+       subtitle = 'Ano: {closest_state}',
+       caption = 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.') +
   
   
   # Flipping coordinates
@@ -285,12 +534,78 @@ p <- animate(suicides_by_ocup,
 anim_save("figures\\suicides_by_ocup.gif", p)
 
 # Visualizing demographis: surgery (yes/no) ====
+suicides_surgery <- 
+  
+  df %>% 
+  # Cleaning
+  
+  filter(CIRURGIA != 'NA') %>%
+  
+  group_by(CIRURGIA) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>%
+  
+  # Plot
+  ggplot(aes(x = reorder(CIRURGIA, n), y = n, fill = '#f68060')) +
+  
+  # Geom
+  geom_tile(aes(y = n/2, 
+                height = n,
+                width = 0.9), fill = "#f68060") +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 10000, 2500),
+                     limits = c(0, 10000)) +
+  
+  # Labels
+  labs(x = 'Recebeu cirurgia?',
+       y = 'Número de Suicídios Registrados',
+       title = 'Número de Suicídios Registrados que Passaram por Cirurgia no Brasil',
+       caption = 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.') +
+  
+  # Theme
+  project_theme +
+  
+  theme(panel.grid.major.x = element_blank())
+
+suicides_surgery
+
 # Visualizing demographis: where did it occur? ====
 
-# Visualizing suicides through time: line plot ====
+# Visualizing suicides through time: line plot - Pt. 1 ====
 format <- '%m-%Y'
 ym_total$index <- parse_date_time(ym_total$index, format)
 
+suicides_across_years_img <- 
+  ym_total %>% 
+  
+  # Plot
+  ggplot(aes(x = as.Date(index), y = n)) +
+  
+  # Geom
+  geom_line(size = 1, colour = '#f68060') +
+  
+  # X-axis: Limits and ticks
+  scale_x_date(date_breaks = 'years', date_labels = '%Y') +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 1500, by = 250),
+                     limits = c(0, 1500)) +
+  
+  # Labels
+  labs(x= "",
+       y = "",
+       title = "Número de Suicídios Registrados no Brasil em 10 Anos",
+       caption = "Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.") +
+  
+  # Removing legend title
+  project_theme
+
+suicides_across_years_img
+
+# Visualizing suicides through time: line plot - Pt. 2 ====
 suicides_across_years <- 
   ym_total %>% 
   
@@ -311,7 +626,7 @@ suicides_across_years <-
   labs(x= "",
        y = "",
        title = "Número de Suicídios Registrados no Brasil em 10 Anos",
-       subtitle = "Dados entre os anos de 2010 e 2019") +
+       caption = "Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.") +
   
   # Theme
   theme_bw() +
@@ -376,7 +691,8 @@ suicide_var_by_year <-
   # Labels
   labs(x = '',
        y = 'Variação em Relação ao Ano Anterior',
-       title = 'Variação Percentual no Número de Casos Registrados de Suicídio no Brasil por Ano') +
+       title = 'Variação Percentual no Número de Casos Registrados de Suicídio no Brasil por Ano',
+       caption = 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.') +
   
   # Adding line
   geom_hline(yintercept = global_mean, color = "grey40", linetype = 3) +
@@ -424,7 +740,8 @@ student_suicides <-
   # Labels
   labs(x = '',
        y = 'Número de Mortes',
-       title = 'Número de Suicídios de Estudantes ao Longo dos Anos') +
+       title = 'Número de Suicídios de Estudantes ao Longo dos Anos',
+       caption = 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.') +
   
   # Flipping coordinates
   coord_flip() +
@@ -433,3 +750,4 @@ student_suicides <-
   project_theme
 
 student_suicides
+
