@@ -620,7 +620,7 @@ suicides_surgery <-
 
 suicides_surgery
 
-# Visualizing demographics: where did it occur? - Pt. 1 ====
+# Visualizing demographis: where did it occur? - Pt. 1 ====
 estados <- read_country(year = 2019)
 
 by_state <-
@@ -659,6 +659,7 @@ suicide_by_states <- estados %>%
 suicide_by_states
 
 # Visualizing demographics: where did it occur? - Pt. 2 ====
+# Visualizing demographis: where did it occur? - Pt. 2 ====
 estados <- read_country(year = 2019)
 
 by_year_state <-
