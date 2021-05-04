@@ -11,14 +11,10 @@ load_libraries <- function(){
     install.packages("gganimate")
   if (!require("ggplot2"))
     install.packages("ggplot2")
-  if (!require("ggthemes"))
-    install.packages("ggthemes")
+  if (!require("ggiraph"))
+    install.packages("ggiraph")
   if(!require("gifski"))
     install.packages("gifski")
-  if(!require("highcharter"))
-    install.packages("highcharter")
-  if(!require("hrbrthemes"))
-    install.packages("hrbrthemes")
   if(!require("lubridate"))
     install.packages("lubridate")
   if(!require("magrittr"))
@@ -35,8 +31,6 @@ load_libraries <- function(){
     install.packages("sf")
   if(!require("stringr"))
     install.packages("stringr")
-  if(!require("viridis"))
-    install.packages("viridis")
 }
 
 load_libraries()
@@ -190,14 +184,11 @@ ym_total <- df %>%
   count() %>% 
   tidyr::unite(mes, ano, col = 'index', sep = '-')
 
-ym_total
-
 # Creating variations in percentage from one time period to another ====
 #' *year_variation*
 year_variation <- as.data.frame(year_total)
 rownames(year_variation) <- year_variation$ano
 year_variation %<>% select(-ano)
-year_variation
 
 year_variation <- as.ts(year_variation, start = c(2010), frequency = 1)
 
@@ -208,7 +199,6 @@ year_variation <- as.data.frame(year_variation)
 month_variation <- as.data.frame(month_total)
 rownames(month_variation) <- month_variation$mes
 month_variation %<>% select(-mes)
-month_variation
 
 month_variation <- as.ts(month_variation, start = c(1), frequency = 1)
 
@@ -658,7 +648,6 @@ suicide_by_states <- estados %>%
 
 suicide_by_states
 
-# Visualizing demographics: where did it occur? - Pt. 2 ====
 # Visualizing demographis: where did it occur? - Pt. 2 ====
 estados <- read_country(year = 2019)
 
@@ -770,13 +759,13 @@ p <- animate(suicides_across_years,
 
 anim_save("figures\\suicides_across_years.gif", p)
 
-# Visualizing number of suicides through time (year): line plot ====
+# Visualizing variation in suicides through time (year): bar plot ====
 year_variation$index <- parse_date_time(c(2011:2019), '%Y')
 
 # Hyperparameters
 global_mean <- mean(year_variation$year_variation)
 x_start <- as.Date("2013-03-01")
-y_start <- 0.0465
+y_start <- 0.0475
 x_end <- as.Date("2014-03-01")
 y_end <- global_mean
 
@@ -815,7 +804,7 @@ suicide_var_by_year <-
     vjust = 1, size = 3, color = "#181818") +
   
   # Annotations: Pt. 2
-  annotate(geom = "curve", x = x_start, y = y_start - 0.002, xend = x_end, yend = y_end,
+  annotate(geom = "curve", x = x_start, y = y_start - 0.0013, xend = x_end, yend = y_end,
     arrow = arrow(length = unit(0.1, "cm"), type = "closed"),
     color = "grey40") +
   
@@ -828,6 +817,8 @@ suicide_var_by_year <-
   
   coord_flip()
   
+suicide_var_by_year
+
 # Visualizing number of suicides through time (month): bar plot ====
 # Criando a coluna nome_mes
 month_total$nome_mes <- c('Janeiro', 'Fevereiro', 'Março', 
