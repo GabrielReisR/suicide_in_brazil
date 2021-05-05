@@ -43,6 +43,8 @@ load_libraries <- function(){
     install.packages("sf")
   if(!require("stringr"))
     install.packages("stringr")
+  if(!require("tidyr"))
+    install.packages("tidyr")
 }
 
 load_libraries()
@@ -244,7 +246,9 @@ por Gerson Júnior e Henrique Martins na iniciativa
 O objetivo principal para realização do trabalho não interferiu na qualidade de
 tratamento dos dados. Os dados foram extraídos utilizando-se a ferramenta [PySUS](https://github.com/AlertaDengue/PySUS),
 seguindo-se o tutorial descrito [aqui](https://medium.com/psicodata/baixando-e-processando-dados-do-datasus-sobre-suic%C3%ADdio-com-python-656afa17f6ad?source=friends_link&sk=4e94866d21707aefec13aafe5923d6f1), como 
-reiterados nesse vídeo [aqui](https://www.youtube.com/watch?v=7TxlU5mgABk).
+reiterados nesse vídeo [aqui](https://www.youtube.com/watch?v=7TxlU5mgABk). Essa
+mesma metodologia foi a empregada por 
+[Lovisi et al. (2009)](https://www.scielo.br/pdf/rbp/v31s2/v31s2a07.pdf).
 
 Foram baixados os dados de 2010 a 2019, contemplando 10 anos de uma série 
 histórica.
@@ -263,11 +267,237 @@ Qualquer dúvida, comentário ou retificação podem ser enviadas para
 reisrgabriel@gmail.com
 
 ## Série temporal
-#### Variação ao longo dos anos
-```{r, echo = FALSE, out.width = "100%", fig.align = 'center'}
+#### Suicídio ao longo dos anos
+Inicia-se com uma observação geral sobre o fenômeno do suicídio nesses últimos 10
+anos. De forma geral, a quantidade de suicídios aumentou todos os anos, indo de
+9476 no ano de 2010 a 13554 no ano de 2019.
+
+```{r suicides_across_years, echo = FALSE, message=FALSE, warning=FALSE}
+format <- '%m-%Y'
+ym_total$index <- parse_date_time(ym_total$index, format)
+
+suicides_across_years_img <- 
+  ym_total %>% 
+  
+  # Plot
+  ggplot(aes(x = as.Date(index), y = n)) +
+  
+  # Geom
+  geom_line(size = 1, colour = design$fill_color) +
+  
+  # X-axis: Limits and ticks
+  scale_x_date(date_breaks = 'years', date_labels = '%Y') +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 1500, by = 250),
+                     limits = c(0, 1500)) +
+  
+  # Labels
+  labs(x= "",
+       y = "",
+       title = "Número de Suicídios Registrados no Brasil em 10 Anos",
+       caption = design$caption) +
+  
+  # Removing legend title
+  design$project_theme
+
+ggplotly(suicides_across_years_img)
+```
+
+Uma possibilidade é que o aumento de casos de suicídio esteja seguindo o aumento
+populacional ao longo dos anos. Essa variável não foi controlada e caracteriza
+uma das principais limitações desse projeto, já que um aumento de suicídio em 
+números brutos não significa aumento percentual de suicídios em relação à 
+população brasileira.
+
+Tendo isso em mente, prosseguimos com uma análise dos anos, buscando entender
+momentos de maior e menor aumento nos casos de suicídio.
+
+```{r suicide_var_by_year, echo = FALSE, out.width = "100%", fig.align = 'center'}
 knitr::include_graphics("../figures/suicide_var_by_year.png")
 ```
 
+Na figura, pode-se observar uma linha vertical que ultrapassa o ponto 4.08% -
+essa foi a média anual de aumento em números brutos de suicídio. Os anos de 2013,
+2014, 2016 e 2018 apresentaram aumento em números brutos de suicídio menor do
+que a média nos últimos 10 anos. Nessa mesma figura, o ano de 2017 chama a
+atenção como o ano com maior aumento percentual no número bruto de casos de
+suicídio. Casos de suicídio registrados pelo DATASUS passaram de 11455 (em 2016)
+para 12521 em 2017 - um aumento de 9.31% no número bruto de casos registrados.
+
+#### Suicídio ao longo dos meses
+Será que existem meses que tendem a registrar maior número de casos de suicídio
+que outros? De modo geral, o mês de Dezembro contou com o maior número de 
+registros de suicídio pelo DATASUS; Junho contou com o menor número de registros
+de suicídio pelo DATASUS.
+
+```{r monthly_suicide, echo=FALSE,fig.align= 'center', message=FALSE, warning=FALSE, out.width="100%"}
+# Criando a coluna nome_mes
+month_total$nome_mes <- c('Janeiro', 'Fevereiro', 'Março', 
+                          'Abril', 'Maio', 'Junho',
+                          'Julho', 'Agosto', 'Setembro',
+                          'Outubro', 'Novembro', 'Dezembro')
+month_total$nome_mes %<>% as.factor
+
+monthly_suicide <-
+  month_total %>%
+  
+  mutate(nome_mes = fct_relevel(nome_mes,
+                                'Dezembro', 'Novembro', 'Outubro',
+                                'Setembro', 'Agosto', 'Julho', 
+                                'Junho', 'Maio', 'Abril',
+                                'Março', 'Fevereiro', 'Janeiro')) %>% 
+  # Plot
+  ggplot(aes(x = nome_mes, y = n)) +
+  
+  # Geom
+  geom_bar(stat = "identity", fill = design$fill_color, width = .8) +
+  
+  # Labels
+  labs(x = '',
+       y = '',
+       title = 'Número Total de Suicídios Registrados por Mês',
+       caption = design$caption) +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  design$project_theme
+
+ggplotly(monthly_suicide)
+```
+
+Considerando o número total acima, podemos criar uma visualização demonstrando
+as alterações percentuais de suicídio em relação ao mês anterior. Realizando
+uma pequena transformação nos dados, percebemos que os meses de Fevereiro e
+Junho apresentaram quedas nos registros de suicídio no DATASUS. Ao mesmo tempo,
+os meses de Março e Dezembro apresentaram altas nos registros de suicídio se
+comparados aos seus meses antecedentes.
+
+```{r suicide_var_by_month, out.width="100%", echo = FALSE, message=FALSE, warning=FALSE}
+month_variation$index <- c('Fevereiro', 'Março', 'Abril',
+                           'Maio', 'Junho', 'Julho',
+                           'Agosto', 'Setembro', 'Outubro',
+                           'Novembro', 'Dezembro')
+month_variation$index <- factor(month_variation$index,
+                                levels = c('Fevereiro', 'Março', 'Abril',
+                                           'Maio', 'Junho', 'Julho',
+                                           'Agosto', 'Setembro', 'Outubro',
+                                           'Novembro', 'Dezembro'))
+
+# Hyperparameters
+global_mean <- mean(month_variation$month_variation)
+x_start <- as.Date("2013-03-01")
+y_start <- 0.0465
+x_end <- as.Date("2014-03-01")
+y_end <- global_mean
+
+suicide_var_by_month <-
+  month_variation %>% 
+  
+  mutate(index = fct_relevel(index,
+                             'Dezembro', 'Novembro',
+                             'Outubro', 'Setembro', 'Agosto',
+                             'Julho', 'Junho', 'Maio',
+                             'Abril', 'Março', 'Fevereiro')) %>% 
+  
+  # Plot
+  ggplot(aes(x = index, y = month_variation, # to make 'percent' work
+             color = 'black', fill = month_variation)) +
+  
+  # Geom
+  geom_col() +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(-0.1, 0.1, 0.025), limits = c(-0.1, 0.1),
+                     labels = percent) +
+  
+  # X-axis: Colors
+  scale_fill_gradient2(low = 'white', high = design$fill_color) +
+  
+  # Labels
+  labs(x = '',
+       y = 'Variação em Relação ao Mês Anterior',
+       title = 'Variação Percentual Total no Número de Casos Registrados de Suicídio no Brasil por Mês',
+       caption = design$caption) +
+  
+  # Adding line
+  geom_hline(yintercept = global_mean, color = "#181818", linetype = 3) +
+  
+  # Theme
+  design$project_theme +
+  
+  coord_flip()
+
+ggplotly(suicide_var_by_month)
+```
+
+Será que essa variação de mês a mês permaneceu a mesma ao longo dos anos?
+Olhando com calma, ano a ano, percebe-se que a variação percentual em relação ao 
+mês anterior é bastante oscilante.
+
+```{r suicide_var_by_year_by_month, echo = FALSE, out.width = "100%", fig.align = 'center'}
+knitr::include_graphics("../figures/suicide_var_by_year_by_month.gif")
+```
+Agosto de 2014, Março de 2018 e Março de 2019 apresentaram as maiores variações
+percentuais quando comparadas a seus meses anteriores. Fazendo uma rápida busca,
+acontecimentos políticos relevantes rondaram esse período:
+
+* Agosto de 2014: período eleitoral no qual o político Eduardo Campos, então 
+concorrente à presidência, sofreu um grave acidente aéreo que o levou a óbito.
+* Março de 2018: assassinato a tiros da vereadora Marielle Franco, crime ainda
+não solucionado.
+* Março de 2019: tiroteio em uma escola de Suzano provocado por dois ex-alunos.
+10 pessoas morreram e diversas foram feridas.
+
+Para o número de casos por mês e variação por mês, consulte essa tabela
+abaixo:
+
+```{r casos_por_mes_e_variacao,echo=FALSE,warning=FALSE,message=FALSE}
+# Criando variação com meses
+ym_variation[120, ] <- NA # criando última linha
+ym_variation$index <- rep(c('Fevereiro', 'Março', 'Abril',
+                            'Maio', 'Junho', 'Julho',
+                            'Agosto', 'Setembro', 'Outubro',
+                            'Novembro', 'Dezembro', 'Janeiro'), 10)
+
+ym_variation <- ym_variation[1:119, ] # excluindo última linha
+
+# Criando coluna do ano
+ym_variation$ano <- year(ym_total$index)[2:120]
+ym_variation$ano %<>% as.factor
+
+# Criando nova coluna
+ym_variation %<>% 
+  unite(index, ano,
+        col = 'data',
+        sep = " de ") %>% 
+  rename('variacao' = ym_variation) %>% 
+  mutate(variacao = paste0(round(100*variacao, 2), '%')) %>% 
+  select(data, variacao)
+
+# Criando linha de janeiro de 2010
+janeiro_2010 <- data.frame(data = 'Janeiro de 2010',
+                           variacao = NA)
+
+final_df <- rbind(janeiro_2010,
+                  ym_variation)
+
+# Juntando número com variação
+ym_total$data <- final_df$data
+
+final_df %<>% 
+  left_join(ym_total, by = 'data') %>% 
+  select(-index) %>% 
+  rename('numero' = n) %>% 
+  select(numero, variacao, data)
+
+rownames(final_df) <- final_df$data
+final_df %<>% select(-data)
+
+final_df
+```
 
 
 #### Visualização da série histórica
@@ -314,7 +544,7 @@ df %>%
 Por ano, percebe-se uma evolução no número de casos registrados de suicídios por estudantes. Separando-se apenas as 10 profissões mais relevantes a cada ano, a ordem é a seguinte:
 
 ## Estados
-```{r, echo = FALSE, out.width = "75%", fig.align = 'center'}
+```{r, echo = FALSE, out.width = "100%", fig.align = 'center'}
 knitr::include_graphics("../figures/suicide_by_states.png")
 ```
 

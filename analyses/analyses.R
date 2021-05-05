@@ -31,6 +31,8 @@ load_libraries <- function(){
     install.packages("sf")
   if(!require("stringr"))
     install.packages("stringr")
+  if(!require("tidyr"))
+    install.packages("tidyr")
 }
 
 load_libraries()
@@ -183,6 +185,9 @@ ym_total <- df %>%
   group_by(ano, mes) %>% 
   count() %>% 
   tidyr::unite(mes, ano, col = 'index', sep = '-')
+
+format <- '%m-%Y'
+ym_total$index <- parse_date_time(ym_total$index, format)
 
 # Creating variations in percentage from one time period to another ====
 #' *year_variation*
@@ -642,6 +647,7 @@ suicide_by_states <- estados %>%
   
   geom_sf_label(aes(label = abbrev_state),
                 label.padding = unit(0.5, "mm"),
+                position = position_jitterdodge(),
                 size = 3) +
   
   design$project_map_theme
@@ -688,9 +694,6 @@ suicide_by_states_by_year <- estados %>%
 suicide_by_states_by_year
 
 # Visualizing suicides through time: line plot - Pt. 1 ====
-format <- '%m-%Y'
-ym_total$index <- parse_date_time(ym_total$index, format)
-
 suicides_across_years_img <- 
   ym_total %>% 
   
@@ -905,24 +908,10 @@ suicide_var_by_month <-
   # Adding line
   geom_hline(yintercept = global_mean, color = "#181818", linetype = 3) +
   
-  # Annotations: Pt. 1
-  #annotate(geom = "text", x = x_start, y = y_start, 
-  #         label = "A média\nde variação\npor ano",
-  #         vjust = 1, size = 3, color = "#181818") +
-  
-  # Annotations: Pt. 2
-  #annotate(geom = "curve", x = x_start, y = y_start - 0.002, xend = x_end, yend = y_end,
-  #         arrow = arrow(length = unit(0.1, "cm"), type = "closed"),
-  #         color = "grey40") +
-  
-  # Annotations: Pt 3
-  #annotate(geom = "text", x = as.Date("2017-12-01"), y = 0.075, size = 5,
-  #         label = "Em 2017, houve um aumento de 9.31% de\ncasos de suicídio em comparação a 2016.") +
-  
   # Theme
   design$project_theme +
   
-  coord_flip(clip = 'off')
+  coord_flip()
 
 suicide_var_by_month
 
@@ -986,20 +975,6 @@ suicide_var_by_year_by_month <-
   # Adding line
   geom_hline(yintercept = global_mean, color = "#181818", linetype = 3) +
   
-  # Annotations: Pt. 1
-  #annotate(geom = "text", x = x_start, y = y_start, 
-  #         label = "A média\nde variação\npor ano",
-  #         vjust = 1, size = 3, color = "#181818") +
-  
-  # Annotations: Pt. 2
-  #annotate(geom = "curve", x = x_start, y = y_start - 0.002, xend = x_end, yend = y_end,
-  #         arrow = arrow(length = unit(0.1, "cm"), type = "closed"),
-  #         color = "grey40") +
-  
-# Annotations: Pt 3
-#annotate(geom = "text", x = as.Date("2017-12-01"), y = 0.075, size = 5,
-#         label = "Em 2017, houve um aumento de 9.31% de\ncasos de suicídio em comparação a 2016.") +
-
   # Theme
   design$project_theme +
   
