@@ -1,7 +1,7 @@
 ---
 title: "Suicídio no Brasil - de 2010 a 2019"
 author: "Gabriel R. R."
-date: "Última atualização: 04/05/2021"
+date: "Última atualização: 10/05/2021"
 output: 
   html_document:
     toc: true
@@ -267,10 +267,11 @@ Qualquer dúvida, comentário ou retificação podem ser enviadas para
 reisrgabriel@gmail.com
 
 ## Série temporal
-#### Suicídio ao longo dos anos
+### Suicídio ao longo dos anos
 Inicia-se com uma observação geral sobre o fenômeno do suicídio nesses últimos 10
 anos. De forma geral, a quantidade de suicídios aumentou todos os anos, indo de
-9476 no ano de 2010 a 13554 no ano de 2019.
+9476 no ano de 2010 a 13554 no ano de 2019. Em média, foram registrados 11249
+suicídios por ano nesses últimos 10 anos.
 
 ```{r suicides_across_years, echo = FALSE, message=FALSE, warning=FALSE}
 format <- '%m-%Y'
@@ -325,7 +326,7 @@ atenção como o ano com maior aumento percentual no número bruto de casos de
 suicídio. Casos de suicídio registrados pelo DATASUS passaram de 11455 (em 2016)
 para 12521 em 2017 - um aumento de 9.31% no número bruto de casos registrados.
 
-#### Suicídio ao longo dos meses
+### Suicídio ao longo dos meses
 Será que existem meses que tendem a registrar maior número de casos de suicídio
 que outros? De modo geral, o mês de Dezembro contou com o maior número de 
 registros de suicídio pelo DATASUS; Junho contou com o menor número de registros
@@ -441,8 +442,9 @@ mês anterior é bastante oscilante.
 knitr::include_graphics("../figures/suicide_var_by_year_by_month.gif")
 ```
 Agosto de 2014, Março de 2018 e Março de 2019 apresentaram as maiores variações
-percentuais quando comparadas a seus meses anteriores. Fazendo uma rápida busca,
-acontecimentos políticos relevantes rondaram esse período:
+percentuais quando comparadas a seus meses anteriores. Fazendo uma rápida e 
+superficial busca percebeu-se que acontecimentos políticos relevantes rondaram
+esse período:
 
 * Agosto de 2014: período eleitoral no qual o político Eduardo Campos, então 
 concorrente à presidência, sofreu um grave acidente aéreo que o levou a óbito.
@@ -454,7 +456,7 @@ não solucionado.
 Para o número de casos por mês e variação por mês, consulte essa tabela
 abaixo:
 
-```{r casos_por_mes_e_variacao,echo=FALSE,warning=FALSE,message=FALSE}
+```{r casos_por_mes_e_variacao,echo=FALSE,warning=FALSE,message=FALSE,rows.print = 12}
 # Criando variação com meses
 ym_variation[120, ] <- NA # criando última linha
 ym_variation$index <- rep(c('Fevereiro', 'Março', 'Abril',
@@ -499,28 +501,126 @@ final_df %<>% select(-data)
 final_df
 ```
 
+## Quem comete suicídio?
+### Sexo
+Em geral, os homens cometem mais suicídios que as mulheres no Brasil. 
+O número absoluto de suicídios registrados foi de 88394 para homens 
+(78,58%) e 24075 para mulheres (21,40%).
 
-#### Visualização da série histórica
-
-![](D:/Data Science/Projetos/suicide_in_brazil/figures/suicides_across_years.gif) 
-
-#### Suicídios por sexo
-
-Em geral, os homens cometem mais suicídios que as mulheres no Brasil. O número absoluto de suicídios registrados em homens foi de 88394 para homens (78,58%) e 24075	para mulheres (21,40%).
-
-```{r tabela de sexo por ano, echo = F}
+```{r sexo_por_ano, echo=FALSE}
 df %>% 
   group_by(ano, SEXO) %>% 
   count()
 ```
 
+Observando-se o gif abaixo, percebe-se que a relação entre suicídios de homens 
+e mulheres se mostrou razoavelmente constante ao longo dos anos.
 ```{r, echo = FALSE, out.width = "75%", fig.align = 'center'}
 knitr::include_graphics("../figures/suicides_by_sex_by_year.gif")
 ```
 
-## Ocupações
+**Importante**: a divisão entre homens e mulheres desconsidera questões envolvendo
+gênero, principalmente a cisgeneridade e transgeneridade. Especificamente sobre
+a base de dados DATASUS, não foi encontrada uma variável que especificasse 
+a identidade de gênero das pessoas registradas no sistema. Nesse sentido, há
+falta de informação qualificada sobre o suicídio de pessoas trans em uma das
+principais bases de dados pública em saúde do país. Em meio a essa dificuldade,
+a Associação Nacional de Travestis e Transsexuais (ANTRA) publicou que houve um 
+aumento e 34% no número de suicídios de pessoas transgênero no Brasil em 2020,
+quando comparado a 2019 
+([link da reportagem](https://www.uol.com.br/vivabem/noticias/redacao/2020/09/09/aumento-do-numero-de-suicidios-entre-populacao-trans-preocupa-ativistas.htm)). Tais dados, entretanto, foram baseados nos 
+*casos alcançados* pela ANTRA. A falta de uma variável que codifique isso de
+forma acessível no DATASUS dificulta o mapeamento do suicídio de pessoas
+transgênero - que pode ser considerado um problema de saúde pública.
 
-Desde 2010 até 2019, apenas 10 profissões/ocupações estão presentes no topo dos casos de suicídio. Em números absolutos, a ordem de suicídios por profissão é a seguinte:
+### Nível de escolaridade
+Analisando por escolaridade, o grupo das pessoas que tiveram entre 
+4 e 7 anos de ensino formal foi o mais comum.
+
+
+```{r suicides_by_education, fig.align= 'center',echo=FALSE, message=FALSE, warning=FALSE}
+suicides_by_education <- 
+  
+  df %>% 
+  # Cleaning
+  
+  filter(ESC != 'NA') %>%
+  
+  group_by(ESC) %>% 
+  
+  summarize(n = n()) %>%
+  
+  # Plot
+  ggplot(aes(x = ESC, y = n, fill = design$fill_color)) +
+  
+  # Geom
+  geom_col() +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 30000, 10000),
+                     limits = c(0, 30000)) +
+  
+  # Labels
+  labs(x = 'Escolaridade',
+       y = '',
+       title = 'Número de Suicídios Registrados por Escolaridade no Brasil',
+       caption = design$caption) +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  design$project_theme
+
+
+ggplotly(suicides_by_education, tooltip = 'n')
+```
+
+#### Nível de escolaridade da mãe
+
+```{r suicides_by_mothers_education, fig.align= 'center',echo=FALSE, message=FALSE, warning=FALSE}
+suicides_by_mothers_education <- 
+  
+  df %>% 
+  # Cleaning
+  
+  filter(ESCMAE != 'NA') %>%
+  
+  group_by(ESCMAE) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>%
+  
+  # Plot
+  ggplot(aes(x = ESCMAE, y = n, fill = design$fill_color)) +
+  
+  # Geom
+  geom_col() +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 30000, 5000),
+                     limits = c(0, 30000)) +
+  
+  # Labels
+  labs(x = 'Escolaridade da Mãe',
+       y = '',
+       title = 'Número de Suicídios Registrados por Escolaridade da Mãe no Brasil',
+       caption = design$caption) +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  design$project_theme
+
+ggplotly(suicides_by_mothers_education, tooltip = 'n')
+```
+
+### Trabalho e suicídio
+Desde 2010 até 2019, apenas 10 profissões/ocupações estão presentes no topo dos
+casos de suicídio. Em números absolutos, a ordem de suicídios por profissão é a
+seguinte:
 
 ```{r tabela de ocupacoes por ano, echo = F}
 df$OCUP %<>% as.factor
@@ -541,10 +641,77 @@ df %>%
   mutate(ordem = 1:n())
 ```
 
-Por ano, percebe-se uma evolução no número de casos registrados de suicídios por estudantes. Separando-se apenas as 10 profissões mais relevantes a cada ano, a ordem é a seguinte:
+Por ano, percebe-se uma evolução no número de casos registrados de suicídios por
+estudantes. Separando-se apenas as 10 profissões mais relevantes a cada ano, a
+ordem é a seguinte:
 
-## Estados
-```{r, echo = FALSE, out.width = "100%", fig.align = 'center'}
-knitr::include_graphics("../figures/suicide_by_states.png")
+## Onde o suicídio acontece?
+A maioria dos suicídios, em números brutos, ocorre nas regiões Sul e Sudeste.
+Um problema de olhar para números brutos é ignorar números relativos a população
+do estado. Essa limitação não foi sanada nessa análise, que considerou apenas
+números brutos.
+
+*Para entender os números relativos a cada estado, navegue com o mouse por cima*
+*do mapa abaixo.*
+
+```{r suicide_by_states, echo=FALSE, message=FALSE, warning=FALSE}
+load('../data/estados.RData')
+suicide_by_states <- estados %>%
+  
+  ggplot() +
+  
+  geom_sf(aes(fill = n, group = abbrev_state), size = .15) +
+  
+  scale_fill_gradient2(low = "white", high = design$fill_color,
+                       name = "",
+                       limits = c(0, 25000))  +
+  
+  labs(x = '',
+       y = '',
+       title = "Número de Suicídos Registrados por Estado Brasileiro",
+       caption  = design$caption) +
+  
+  theme(plot.caption = element_text(hjust = 0, face= "italic"),
+        plot.title.position = "plot", 
+        plot.caption.position =  "plot") +
+  
+  geom_sf_label(aes(label = abbrev_state),
+                size = 3) +
+  
+  design$project_map_theme
+
+
+ggplotly(suicide_by_states)
 ```
+Abaixo, confira o número bruto de suicídios registrados por estado.
+
+* Roraima registrou o menor número de suicídios (n = 402),
+seguido por Amapá (n = 429) e Acre (n = 508).
+
+* São Paulo é o estado com maior número de registros de suicídio (n = 21970),
+seguido por Minas Gerais (n = 13541) e Rio Grande do Sul (n = 11860).
+
+Vamos lembrar que a média de suicídio por ano, nesses últimos 10 anos, foi de 
+11249 casos ao ano. Nesse sentido, 
+
+* Minas Gerais colaborou para o registro de 1 ano de casos de suicídio no 
+Brasil - o mesmo poderia ser dito do Rio Grande do Sul.
+* Seguindo o mesmo raciocínio, São Paulo colaborou para aproximadamente 2 anos
+de casos de suicídio no Brasil. No geral, esses três estados registraram 42% de
+todos os casos de suicídio no Brasil nesses últimos 10 anos.
+
+```{r n_suicides_by_states, echo=FALSE, message=FALSE, warning=FALSE, rows.print=27}
+as.data.frame(estados) %>% 
+  select(-c(code_state, code_region, name_region, geom)) %>% 
+  arrange(abbrev_state) %>% 
+  select(-abbrev_state) %>% 
+  rename('estado' = name_state)
+```
+
+
+
+
+
+
+
 

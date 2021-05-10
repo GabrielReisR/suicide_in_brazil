@@ -358,19 +358,15 @@ suicides_by_education <-
   
   summarize(n = n()) %>%
   
-  #arrange(desc(n), .by_group = T) %>%
-  
   # Plot
   ggplot(aes(x = ESC, y = n, fill = design$fill_color)) +
   
   # Geom
-  geom_tile(aes(y = n/2, 
-                height = n,
-                width = 0.9), fill = design$fill_color) +
+  geom_col() +
   
   # Y-axis: Limits and ticks
-  scale_y_continuous(breaks = seq(0, 60000, 10000),
-                     limits = c(0, 60000)) +
+  scale_y_continuous(breaks = seq(0, 30000, 10000),
+                     limits = c(0, 30000)) +
   
   # Labels
   labs(x = 'Escolaridade',
@@ -383,6 +379,7 @@ suicides_by_education <-
   
   # Theme
   design$project_theme
+
 
 suicides_by_education
 
@@ -404,13 +401,11 @@ suicides_by_mothers_education <-
   ggplot(aes(x = ESCMAE, y = n, fill = design$fill_color)) +
   
   # Geom
-  geom_tile(aes(y = n/2, 
-                height = n,
-                width = 0.9), fill = design$fill_color) +
+  geom_col() +
   
   # Y-axis: Limits and ticks
-  scale_y_continuous(breaks = seq(0, 60000, 10000),
-                     limits = c(0, 60000)) +
+  scale_y_continuous(breaks = seq(0, 30000, 5000),
+                     limits = c(0, 30000)) +
   
   # Labels
   labs(x = 'Escolaridade da Mãe',
@@ -630,7 +625,7 @@ suicide_by_states <- estados %>%
   
   ggplot() +
   
-  geom_sf(aes(fill = n), size = .15) +
+  geom_sf(aes(fill = n, group = abbrev_state), size = .15) +
   
   scale_fill_gradient2(low = "white", high = design$fill_color,
                        name = "",
@@ -646,8 +641,6 @@ suicide_by_states <- estados %>%
         plot.caption.position =  "plot") +
   
   geom_sf_label(aes(label = abbrev_state),
-                label.padding = unit(0.5, "mm"),
-                position = position_jitterdodge(),
                 size = 3) +
   
   design$project_map_theme
