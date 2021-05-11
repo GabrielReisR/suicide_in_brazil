@@ -1,6 +1,6 @@
 ---
 title: "Suicídio no Brasil - de 2010 a 2019"
-author: "Gabriel R. R."
+author: "Gabriel R. Rodrigues"
 date: "Última atualização: 11/05/2021"
 output: 
   html_document:
@@ -266,7 +266,7 @@ aqui descritas devem ser passíveis de replicação direta ao se executar o cód
 presente no repositório.
 
 Qualquer dúvida, comentário ou retificação podem ser enviadas para 
-reisrgabriel@gmail.com
+reisrgabriel@gmail.com ou em algum link [aqui](https://linktr.ee/gabrielrr).
 
 ## Série temporal
 ### Suicídio ao longo dos anos

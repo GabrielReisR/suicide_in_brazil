@@ -31,7 +31,7 @@ aqui descritas devem ser passíveis de replicação direta ao se executar o cód
 presente no repositório.
 
 Qualquer dúvida, comentário ou retificação podem ser enviadas para 
-reisrgabriel@gmail.com
+reisrgabriel@gmail.com ou em algum link [aqui](https://linktr.ee/gabrielrr).
 
 #### Resumo
 De forma geral, observou-se que:
