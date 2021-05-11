@@ -46,7 +46,8 @@ create_design <- function(){
   fill_color <- '#f68060'
   
   # Caption
-  caption <- 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.'
+  caption <- 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.
+  Gabriel R. Rodrigues'
   
   # Setting main theme
   project_theme <- 
@@ -117,8 +118,9 @@ clean_data <- function(df){
   
   # Mother's education as factor
   df$ESCMAE %<>% as.factor
-  df$ESCMAE <- factor(df$ESC,
-                      levels = c('1 a 3 anos',
+  df$ESCMAE <- factor(df$ESCMAE,
+                      levels = c('Nenhuma',
+                                 '1 a 3 anos',
                                  '4 a 7 anos',
                                  '8 a 11 anos',
                                  '12 e mais'))
@@ -285,9 +287,7 @@ suicides_by_race <-
   ggplot(aes(x = reorder(RACACOR, n), y = n, fill = design$fill_color)) +
   
   # Geom
-  geom_tile(aes(y = n/2, 
-                height = n,
-                width = 0.9), fill = design$fill_color) +
+  geom_col() +
   
   # Y-axis: Limits and ticks
   scale_y_continuous(breaks = seq(0, 60000, 10000),
@@ -322,12 +322,11 @@ suicides_medical_assistance <-
   arrange(desc(n), .by_group = T) %>%
   
   # Plot
-  ggplot(aes(x = reorder(ASSISTMED, n), y = n, fill = design$fill_color)) +
+  ggplot(aes(x = reorder(ASSISTMED, n), y = n,
+             fill = design$fill_color)) +
   
   # Geom
-  geom_tile(aes(y = n/2, 
-                height = n,
-                width = 0.9), fill = design$fill_color) +
+  geom_col() +
   
   # Y-axis: Limits and ticks
   scale_y_continuous(breaks = seq(0, 60000, 10000),
@@ -335,7 +334,7 @@ suicides_medical_assistance <-
   
   # Labels
   labs(x = 'Recebeu assistência médica?',
-       y = 'Número de Suicídios Registrados',
+       y = '',
        title = 'Número de Suicídios Registrados que Receberam Assistência Médica no Brasil',
        caption = design$caption) +
   
@@ -369,7 +368,7 @@ suicides_by_education <-
                      limits = c(0, 30000)) +
   
   # Labels
-  labs(x = 'Escolaridade',
+  labs(x = '',
        y = '',
        title = 'Número de Suicídios Registrados por Escolaridade no Brasil',
        caption = design$caption) +
@@ -380,10 +379,12 @@ suicides_by_education <-
   # Theme
   design$project_theme
 
-
 suicides_by_education
 
 # Visualizing demographics: mother's education ====
+#' *ATTENTION*
+#' Mother's education presented showed only 15 cases.
+#' Given the low number of cases, it was best left ignored.
 suicides_by_mothers_education <- 
   
   df %>% 
@@ -404,11 +405,11 @@ suicides_by_mothers_education <-
   geom_col() +
   
   # Y-axis: Limits and ticks
-  scale_y_continuous(breaks = seq(0, 30000, 5000),
-                     limits = c(0, 30000)) +
+  scale_y_continuous(breaks = seq(0, 10, 2),
+                     limits = c(0, 10)) +
   
   # Labels
-  labs(x = 'Escolaridade da Mãe',
+  labs(x = '',
        y = '',
        title = 'Número de Suicídios Registrados por Escolaridade da Mãe no Brasil',
        caption = design$caption) +
@@ -439,16 +440,14 @@ suicides_by_marital_status <-
   ggplot(aes(x = fct_reorder(ESTCIV, n), y = n, fill = design$fill_color)) +
   
   # Geom
-  geom_tile(aes(y = n/2, 
-                height = n,
-                width = 0.9), fill = design$fill_color) +
+  geom_col() +
   
   # Y-axis: Limits and ticks
   scale_y_continuous(breaks = seq(0, 60000, 10000),
                      limits = c(0, 60000)) +
   
   # Labels
-  labs(x = 'Escolaridade da Mãe',
+  labs(x = '',
        y = '',
        title = 'Número de Suicídios Registrados por Estado Civil',
        caption = design$caption) +
@@ -461,7 +460,7 @@ suicides_by_marital_status <-
 
 suicides_by_marital_status
 
-# Visualizing demographics: ocupation - Pt. 1 ====
+# Visualizing demographics: ocupation - Pt. 1: top 20 ocupations ====
 suicides_by_ocup_img <-
   
   df %>%
@@ -479,12 +478,11 @@ suicides_by_ocup_img <-
   
   # Plot
   
-  ggplot(aes(x = fct_reorder(as.factor(OCUP), n), y = n, group = OCUP)) +
+  ggplot(aes(x = fct_reorder(as.factor(OCUP), n), y = n,
+             group = OCUP, fill = design$fill_color)) +
   
   # Geom
-  geom_tile(aes(y = n/2, 
-                height = n,
-                width = 0.9), fill = design$fill_color) +
+  geom_col() +
   
   # Y-axis
   scale_y_continuous(breaks = seq(0, 8000, 2000),
@@ -505,7 +503,7 @@ suicides_by_ocup_img <-
 
 suicides_by_ocup_img
 
-# Visualizing demographics: ocupation - Pt. 2 ====
+# Visualizing demographics: ocupation - Pt. 2: gif ====
 suicides_by_ocup <-
   
   df %>%
@@ -521,18 +519,17 @@ suicides_by_ocup <-
   
   arrange(desc(n), .by_group = T) %>% 
   
-  top_n(n = 10) %>% #TODO: fix this
+  top_n(n = 10) %>%
   
   mutate(order = 1:n()) %>% 
   
   # Plot
   
-  ggplot(aes(x = fct_reorder(as.factor(order), n), y = n, group = OCUP)) +
+  ggplot(aes(x = fct_reorder(as.factor(order), n), y = n,
+             group = OCUP, fill = design$fill_color)) +
   
   # Geom
-  geom_tile(aes(y = n/2, 
-                height = n,
-                width = 0.9), fill = design$fill_color) +
+  geom_col() +
   
   # X-axis: Label
   geom_text(aes(y = 1400, label = OCUP), vjust = -1) +
@@ -571,6 +568,77 @@ p <- animate(suicides_by_ocup,
 
 anim_save("figures\\suicides_by_ocup.gif", p)
 
+# Visualizing demographics: ocupation - Pt. 3: student suicides ====
+student_suicides <-
+  df %>%
+  
+  # Cleaning
+  filter(OCUP != 'NA') %>% 
+  
+  mutate(ano = as.factor(ano)) %>% 
+  
+  group_by(ano) %>% 
+  
+  count() %>%
+  
+  # Plot
+  ggplot(aes(x = ano, y = n, fill = design$fill_color)) +
+  
+  # Geom
+  geom_col() +
+  
+  # Labels
+  labs(x = '',
+       y = '',
+       title = 'Número de Suicídios Registrados de Estudantes ao Longo dos Anos',
+       caption = design$caption) +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  design$project_theme
+
+student_suicides
+
+# Visualizing demographics: place of occurence ====
+suicides_by_place_of_occurence <- 
+  
+  df %>% 
+  # Cleaning
+  
+  filter(LOCOCOR != 'NA') %>%
+  
+  group_by(LOCOCOR) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>%
+  
+  # Plot
+  ggplot(aes(x = reorder(LOCOCOR, n), y = n, fill = design$fill_color)) +
+  
+  # Geom
+  geom_col() +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 70000, 10000),
+                     limits = c(0, 70000)) +
+  
+  # Labels
+  labs(x = '',
+       y = '',
+       title = 'Número de Suicídios Registrados por Local de Ocorrência no Brasil',
+       caption = design$caption) +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  design$project_theme
+
+suicides_by_place_of_occurence
+
 # Visualizing demographics: surgery (yes/no) ====
 suicides_surgery <- 
   
@@ -586,12 +654,11 @@ suicides_surgery <-
   arrange(desc(n), .by_group = T) %>%
   
   # Plot
-  ggplot(aes(x = reorder(CIRURGIA, n), y = n, fill = design$fill_color)) +
+  ggplot(aes(x = reorder(CIRURGIA, n), y = n,
+             fill = design$fill_color)) +
   
   # Geom
-  geom_tile(aes(y = n/2, 
-                height = n,
-                width = 0.9), fill = design$fill_color) +
+  geom_col() +
   
   # Y-axis: Limits and ticks
   scale_y_continuous(breaks = seq(0, 10000, 2500),
@@ -985,35 +1052,3 @@ p <- animate(suicide_var_by_year_by_month,
 
 anim_save("figures\\suicide_var_by_year_by_month.gif", p)
 
-# Visualizing student suicides ====
-student_suicides <-
-  df %>%
-  
-  # Cleaning
-  filter(OCUP != 'NA') %>% 
-  
-  mutate(ano = as.factor(ano)) %>% 
-  
-  group_by(ano) %>% 
-  
-  count() %>%
-  
-  # Plot
-  ggplot(aes(x = ano, y = n)) +
-  
-  # Geom
-  geom_bar(stat = "identity", fill = design$fill_color, width = .8) +
-  
-  # Labels
-  labs(x = '',
-       y = '',
-       title = 'Número de Suicídios Registrados de Estudantes ao Longo dos Anos',
-       caption = design$caption) +
-  
-  # Flipping coordinates
-  coord_flip() +
-  
-  # Theme
-  design$project_theme
-
-student_suicides
