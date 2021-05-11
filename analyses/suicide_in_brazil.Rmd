@@ -1,7 +1,7 @@
 ---
 title: "Suicídio no Brasil - de 2010 a 2019"
 author: "Gabriel R. R."
-date: "Última atualização: 10/05/2021"
+date: "Última atualização: 11/05/2021"
 output: 
   html_document:
     toc: true
@@ -59,7 +59,8 @@ create_design <- function(){
   fill_color <- '#f68060'
   
   # Caption
-  caption <- 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.'
+  caption <- 'Dados do DATASUS entre os anos de 2010 e 2019 extraídos com PySUS.
+  Gabriel R. Rodrigues'
   
   # Setting main theme
   project_theme <- 
@@ -130,8 +131,9 @@ clean_data <- function(df){
   
   # Mother's education as factor
   df$ESCMAE %<>% as.factor
-  df$ESCMAE <- factor(df$ESC,
-                      levels = c('1 a 3 anos',
+  df$ESCMAE <- factor(df$ESCMAE,
+                      levels = c('Nenhuma',
+                                 '1 a 3 anos',
                                  '4 a 7 anos',
                                  '8 a 11 anos',
                                  '12 e mais'))
@@ -420,7 +422,7 @@ suicide_var_by_month <-
   # Labels
   labs(x = '',
        y = 'Variação em Relação ao Mês Anterior',
-       title = 'Variação Percentual Total no Número de Casos Registrados de Suicídio no Brasil por Mês',
+       title = 'Variação Total no Número de Casos Registrados por Mês',
        caption = design$caption) +
   
   # Adding line
@@ -431,7 +433,7 @@ suicide_var_by_month <-
   
   coord_flip()
 
-ggplotly(suicide_var_by_month)
+ggplotly(suicide_var_by_month, tooltip = 'month_variation')
 ```
 
 Será que essa variação de mês a mês permaneceu a mesma ao longo dos anos?
@@ -509,6 +511,7 @@ O número absoluto de suicídios registrados foi de 88394 para homens
 
 ```{r sexo_por_ano, echo=FALSE}
 df %>% 
+  filter(SEXO != 'NA') %>% 
   group_by(ano, SEXO) %>% 
   count()
 ```
@@ -533,10 +536,67 @@ quando comparado a 2019
 forma acessível no DATASUS dificulta o mapeamento do suicídio de pessoas
 transgênero - que pode ser considerado um problema de saúde pública.
 
-### Nível de escolaridade
-Analisando por escolaridade, o grupo das pessoas que tiveram entre 
-4 e 7 anos de ensino formal foi o mais comum.
+### Raça/cor
+Em relação à raça/cor, de acordo com a classificação do IBGE:
 
+* A maioria dos casos de suicídio atinge a população branca (51,29%).
+* Somando-se os percentuais da população preta (5,42%) e parda (41,80%),
+tem-se que 47,22% dos casos atinge a população negra do Brasil.
+
+```{r suicides_by_race, echo= FALSE}
+suicides_by_race <- 
+  
+  df %>% 
+  # Cleaning
+  
+  filter(RACACOR != 'NA') %>%
+  
+  group_by(RACACOR) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>%
+  
+  # Plot
+  ggplot(aes(x = reorder(RACACOR, n), y = n, fill = design$fill_color)) +
+  
+  # Geom
+  geom_col() +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 60000, 10000),
+                     limits = c(0, 60000)) +
+  
+  # Labels
+  labs(x = '',
+       y = '',
+       title = 'Número de Suicídios Registrados por Raça/Cor',
+       caption = design$caption) +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  design$project_theme
+
+ggplotly(suicides_by_race, tooltip = 'n')
+```
+
+
+### Nível de escolaridade
+Realizando o recorte por anos de educação formal, o grupo que teve entre 4 a 7
+anos de educação foi o que mais cometeu suicídio, totalizando 32,35% dos casos.
+Esse grupo equivale às pessoas com ensino fundamental I completo ou ensino
+fundamental II incompleto.
+Em segundo lugar, as pessoas com ensino médio completo ou incompleto (8 a 11 
+anos de educação), totalizando 30,77% dos casos.
+
+Apenas 11,76% dos casos foram registrados com pessoas que tinham ensino superior
+completo ou incompleto. Ainda, pessoas sem nenhum nível educacional registraram
+o menor índice de suicídios, com 6,16%. É importante refletir que o baixo
+percentual de suicídios para pessoas sem nenhum nível educacional talvez seja 
+reflexo do baixo número populacional de brasileiros/as sem nenhum nível formal
+de educação.
 
 ```{r suicides_by_education, fig.align= 'center',echo=FALSE, message=FALSE, warning=FALSE}
 suicides_by_education <- 
@@ -563,7 +623,7 @@ suicides_by_education <-
   # Labels
   labs(x = 'Escolaridade',
        y = '',
-       title = 'Número de Suicídios Registrados por Escolaridade no Brasil',
+       title = 'Número de Suicídios Registrados por Escolaridade',
        caption = design$caption) +
   
   # Flipping coordinates
@@ -576,36 +636,42 @@ suicides_by_education <-
 ggplotly(suicides_by_education, tooltip = 'n')
 ```
 
-#### Nível de escolaridade da mãe
+### Estado civil
+Em relação ao estado civil:
 
-```{r suicides_by_mothers_education, fig.align= 'center',echo=FALSE, message=FALSE, warning=FALSE}
-suicides_by_mothers_education <- 
+* A maioria dos registros de suicídio no Brasil entre 2010 e 2019 foram de
+pessoas solteiras (54,46%).
+* Pessoas casadas ocupam a segunda posição, com 28,90% dos casos de suicídio
+ao longo dos últimos 10 anos.
+
+```{r suicides_by_marital_status, echo = F}
+suicides_by_marital_status <- 
   
   df %>% 
   # Cleaning
   
-  filter(ESCMAE != 'NA') %>%
+  filter(ESTCIV != 'NA') %>%
   
-  group_by(ESCMAE) %>% 
+  group_by(ESTCIV) %>% 
   
   summarize(n = n()) %>%
   
   arrange(desc(n), .by_group = T) %>%
   
   # Plot
-  ggplot(aes(x = ESCMAE, y = n, fill = design$fill_color)) +
+  ggplot(aes(x = fct_reorder(ESTCIV, n), y = n, fill = design$fill_color)) +
   
   # Geom
   geom_col() +
   
   # Y-axis: Limits and ticks
-  scale_y_continuous(breaks = seq(0, 30000, 5000),
-                     limits = c(0, 30000)) +
+  scale_y_continuous(breaks = seq(0, 60000, 10000),
+                     limits = c(0, 60000)) +
   
   # Labels
-  labs(x = 'Escolaridade da Mãe',
+  labs(x = '',
        y = '',
-       title = 'Número de Suicídios Registrados por Escolaridade da Mãe no Brasil',
+       title = 'Número de Suicídios por Estado Civil',
        caption = design$caption) +
   
   # Flipping coordinates
@@ -614,20 +680,19 @@ suicides_by_mothers_education <-
   # Theme
   design$project_theme
 
-ggplotly(suicides_by_mothers_education, tooltip = 'n')
+ggplotly(suicides_by_marital_status, tooltip = 'n')
+
 ```
 
+
 ### Trabalho e suicídio
-Desde 2010 até 2019, apenas 10 profissões/ocupações estão presentes no topo dos
-casos de suicídio. Em números absolutos, a ordem de suicídios por profissão é a
-seguinte:
+Considerando-se os últimos 10 anos, as 20 ocupações com maior registro de
+suicídio foram as seguintes:
 
-```{r tabela de ocupacoes por ano, echo = F}
-df$OCUP %<>% as.factor
-
-df$OCUP[str_detect(df$OCUP, "\\d")] <- NA
-
-df %>%
+```{r suicides_top_20_ocupations, echo=FALSE, message=FALSE, warning=FALSE}
+suicides_by_ocup_img <-
+  
+  df %>%
   
   # Cleaning
   filter(OCUP != 'NA') %>% 
@@ -638,15 +703,156 @@ df %>%
   
   arrange(desc(n), .by_group = T) %>% 
   
-  mutate(ordem = 1:n())
+  top_n(n = 20) %>%
+  
+  # Plot
+  
+  ggplot(aes(x = fct_reorder(as.factor(OCUP), n), y = n,
+             group = OCUP, fill = design$fill_color)) +
+  
+  # Geom
+  geom_col() +
+  
+  # Y-axis
+  scale_y_continuous(breaks = seq(0, 8000, 2000),
+                     limits = c(0, 8000)) +
+  
+  # Labels
+  labs(x = '',
+       y = '',
+       title = '',
+       caption = design$caption) +
+  
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  design$project_theme
+
+ggplotly(suicides_by_ocup_img, tooltip = 'n')
+```
+
+Desde 2010 até 2019, apenas 10 profissões/ocupações estão presentes no topo dos
+casos de suicídio.
+
+```{r suicides_by_ocupation_through_years, echo= F, message=F, warning=F}
+knitr::include_graphics("../figures/suicides_by_ocup.gif")
 ```
 
 Por ano, percebe-se uma evolução no número de casos registrados de suicídios por
-estudantes. Separando-se apenas as 10 profissões mais relevantes a cada ano, a
-ordem é a seguinte:
+estudantes.
+
+```{r student_suicides, echo= FALSE}
+student_suicides <-
+  df %>%
+  
+  # Cleaning
+  filter(OCUP != 'NA') %>% 
+  
+  mutate(ano = as.factor(ano)) %>% 
+  
+  group_by(ano) %>% 
+  
+  count() %>%
+  
+  # Plot
+  ggplot(aes(x = ano, y = n, fill = design$fill_color)) +
+  
+  # Geom
+  geom_col() +
+  
+  # Labels
+  labs(x = '',
+       y = '',
+       title = 'Número de Suicídios Registrados de Estudantes',
+       caption = design$caption) +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  design$project_theme
+
+ggplotly(student_suicides, tooltip = c('ano', 'n'))
+
+```
+Para quem se interessar, aí vão os números brutos de suicídios registrados para
+cada uma dessas 10 profissões ao longo dos anos:
+
+```{r tabela de ocupacoes por ano, echo=F, message=F, warning=F, rows.print=10}
+df$OCUP %<>% as.factor
+
+df$OCUP[str_detect(df$OCUP, "\\d")] <- NA
+
+df %>%
+  
+  # Cleaning
+  filter(OCUP != 'NA') %>% 
+  
+  group_by(ano, OCUP) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>%
+  
+  top_n(n = 10) %>% 
+  
+  mutate(ordem = 1:n())
+```
 
 ## Onde o suicídio acontece?
-A maioria dos suicídios, em números brutos, ocorre nas regiões Sul e Sudeste.
+### Local de ocorrência
+Em relação à classificação do local de ocorrência, percebe-se que 
+
+* A maioria dos suicídios ocorrem nas próprias casas (60,89% dos casos).
+* 15,69% dos casos de suicídio ocorreram em Hospitais. Isso parece ser um fator
+de confusão: é possível que as mortes advindas de suicídio tenham ocorrido no
+hospital - por isso esse alto percentual de casos nesse local.
+* Ademais, 6,24% dos suicídios ocorreram em via pública.
+
+```{r suicides_by_place_of_occurence, echo=F, warning=F, message=F}
+suicides_by_place_of_occurence <- 
+  
+  df %>% 
+  # Cleaning
+  
+  filter(LOCOCOR != 'NA') %>%
+  
+  group_by(LOCOCOR) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>%
+  
+  # Plot
+  ggplot(aes(x = reorder(LOCOCOR, n), y = n, fill = design$fill_color)) +
+  
+  # Geom
+  geom_col() +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 70000, 20000),
+                     limits = c(0, 70000)) +
+  
+  # Labels
+  labs(x = '',
+       y = '',
+       title = 'Local de Ocorrência de Suicídios',
+       caption = design$caption) +
+  
+  # Flipping coordinates
+  coord_flip() +
+  
+  # Theme
+  design$project_theme
+
+ggplotly(suicides_by_place_of_occurence, tooltip = 'n')
+```
+
+
+### Suicídios por estados
+A maioria dos suicídios, em números brutos, ocorreram nas regiões Sul e Sudeste.
 Um problema de olhar para números brutos é ignorar números relativos a população
 do estado. Essa limitação não foi sanada nessa análise, que considerou apenas
 números brutos.
@@ -700,13 +906,160 @@ Brasil - o mesmo poderia ser dito do Rio Grande do Sul.
 de casos de suicídio no Brasil. No geral, esses três estados registraram 42% de
 todos os casos de suicídio no Brasil nesses últimos 10 anos.
 
-```{r n_suicides_by_states, echo=FALSE, message=FALSE, warning=FALSE, rows.print=27}
+```{r n_suicides_by_states, echo=F, message=F, warning=F, rows.print=27}
 as.data.frame(estados) %>% 
   select(-c(code_state, code_region, name_region, geom)) %>% 
   arrange(abbrev_state) %>% 
   select(-abbrev_state) %>% 
   rename('estado' = name_state)
 ```
+
+Caso queira saber quais os números brutos de suicídio por estado ao ano, aí vai
+uma nova tabela:
+
+```{r n_suicides_by_states_by_year, echo=F, message=F, warning=F, rows.print=27}
+df %>%
+  group_by(ano, estado) %>%
+  dplyr::summarise(n = n())
+```
+
+## Assistência médica e suicídio
+O DATASUS possui uma variável chamada de "ASSISTMED". Essa variável codifica se
+o caso registrado no sistema recebeu assistência médica. Apesar de um alto
+número de casos sem registro nessa variável (casos missing = 41804), percebe-se
+que a maioria dos casos registrados de suicídio não receberam assistência médica
+(79,67%).
+
+```{r suicides_medical_assistance, echo=F, message=F, warning=F}
+suicides_medical_assistance <- 
+  
+  df %>% 
+  # Cleaning
+  
+  filter(ASSISTMED != 'NA') %>%
+  
+  group_by(ASSISTMED) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>%
+  
+  # Plot
+  ggplot(aes(x = reorder(ASSISTMED, n), y = n,
+             fill = design$fill_color)) +
+  
+  # Geom
+  geom_col() +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 60000, 10000),
+                     limits = c(0, 60000)) +
+  
+  # Labels
+  labs(x = 'Recebeu assistência médica?',
+       y = '',
+       title = '',
+       caption = design$caption) +
+  
+  # Theme
+  design$project_theme +
+  
+  theme(panel.grid.major.x = element_blank())
+
+ggplotly(suicides_medical_assistance, tooltip = 'n')
+```
+
+Além disso, apenas 152 casos foram registrados como tendo recebido cirurgia.
+
+```{r suicides_surgery, echo=F, message=F, warning=F}
+suicides_surgery <- 
+  
+  df %>% 
+  # Cleaning
+  
+  filter(CIRURGIA != 'NA') %>%
+  
+  group_by(CIRURGIA) %>% 
+  
+  summarize(n = n()) %>%
+  
+  arrange(desc(n), .by_group = T) %>%
+  
+  # Plot
+  ggplot(aes(x = reorder(CIRURGIA, n), y = n,
+             fill = design$fill_color)) +
+  
+  # Geom
+  geom_col() +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = seq(0, 10000, 2500),
+                     limits = c(0, 10000)) +
+  
+  # Labels
+  labs(x = 'Recebeu cirurgia?',
+       y = '',
+       title = '',
+       caption = design$caption) +
+  
+  # Theme
+  design$project_theme +
+  
+  theme(panel.grid.major.x = element_blank())
+
+ggplotly(suicides_surgery, tooltip = 'n')
+```
+
+
+## Resumo geral
+Esse trabalho buscou delinear características demográficas da população
+que cometeu suicídio entre os anos de 2010 e 2019 no Brasil.
+
+De forma geral, observou-se que:
+
+* A média de suicídios ao longo de 2010 e 2019, por ano, é de 11249. De modo
+geral, o número bruto de suicídios vem aumentando ao longo dos anos.
+* Os meses de Dezembro, Outubro e Março, respectivamente, contaram com o maior
+número de casos de suicídio.
+* Ano após ano, homens (78,58%) cometeram mais suicídios do que as mulheres.
+  * Não se tem dados estruturados sobre a população transgênero pelo DATASUS.
+* A população que comete suicídio é majoritariamente branca (51,29%). Além
+disso, somando-se os percentuais da população preta (5,42%) e parda (41,80%),
+tem-se que 47,22% dos casos atinge a população negra do Brasil.
+* Pessoas com ensino fundamental I completo ou ensino fundamental II incompleto
+somaram 32,35% dos casos de suicídio. Após isso, 30,77% dos casos de suicídio
+foram registrados em pessoas com ensino médio completo ou incompleto.
+* A maioria dos registros de suicídio no Brasil entre 2010 e 2019 foram de
+pessoas solteiras (54,46%).
+* Aposentados/as e pensionistas, estudantes, donas de casa, trabalhadores/as
+agropecuários em geral, e empregados/as doméstico nos serviços gerais foram as
+profissões que mais registraram suicídios no Brasil entre 2010 e 2019.
+  * Estudantes têm liderado o número de suicídios no Brasil desde 2017, seguidos
+  por aposentados/as e trabalhadores/as agropecuários em geral. 
+* O local mais comum para ocorrência do suicídio é no domicílio (60,89% dos
+casos).
+* Roraima registrou o menor número de suicídios ao longo dos últimos
+10 anos (n = 402), seguido por Amapá (n = 429) e Acre (n = 508).
+* São Paulo é o estado com maior número de registros de suicídio (n = 21970),
+seguido por Minas Gerais (n = 13541) e Rio Grande do Sul (n = 11860).
+* A maioria dos casos de suicídio não receberam nem assistência médica nem
+cirurgia.
+
+## Contato
+Esse trabalho buscou dar um panorama geral sobre os casos de suicídio no Brasil
+entre 2010 e 2019. Além disso, o
+[código aberto do trabalho](https://github.com/GabrielReisR/suicide_in_brazil)
+permite que qualquer pessoa que entenda de R possa tentar replicar as análises
+aqui descritas. De toda a forma, ressalta-se o direito como autor de uso das
+imagens e análises aqui descritas.
+
+Caso tenha errado em algum ponto ou me equivocado na breve explicação de algo,
+adoraria receber sugestões de melhoria desse documento. Você pode falar comigo
+através do https://linktr.ee/gabrielrr
+
+Gostou muito do trabalho e quer apoiar o tempo dedicado a isso?
+Se quiser, [você pode me pagar um café](https://ko-fi.com/gabrielrr).
+
 
 
 
