@@ -81,7 +81,7 @@ análises aqui descritas devem ser acompanhadas da referência a esse trabalho.
 
 Caso tenha errado em algum ponto ou me equivocado na breve explicação de algo,
 adoraria receber sugestões de melhoria desse documento. Você pode falar comigo
-através dos links presentes em <a href= "https://reisrgabriel.com" target= "_blank"></a>
+através dos links presentes <a href= "https://reisrgabriel.com" target= "_blank">aqui</a>.
 
 Gostou muito do trabalho e quer apoiar o tempo dedicado a ele?
 Se quiser, <a href="https://ko-fi.com/gabrielrr" target="_blank">você pode me pagar um café</a>.
