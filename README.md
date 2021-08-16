@@ -71,7 +71,6 @@ seguido por Minas Gerais (n = 13541) e Rio Grande do Sul (n = 11860).
 * A maioria dos casos de suicídio não receberam nem assistência médica nem
 cirurgia.
 
-#### Contato
 ## Contato
 Esse trabalho buscou dar um panorama geral sobre os casos de suicídio no Brasil
 entre 2010 e 2019. Além disso, o
@@ -82,7 +81,7 @@ análises aqui descritas devem ser acompanhadas da referência a esse trabalho.
 
 Caso tenha errado em algum ponto ou me equivocado na breve explicação de algo,
 adoraria receber sugestões de melhoria desse documento. Você pode falar comigo
-através dos links presentes em <a href= "https://linktr.ee/gabrielrr" target= "_blank"></a>
+através dos links presentes em <a href= "https://reisrgabriel.com" target= "_blank"></a>
 
 Gostou muito do trabalho e quer apoiar o tempo dedicado a ele?
 Se quiser, <a href="https://ko-fi.com/gabrielrr" target="_blank">você pode me pagar um café</a>.
