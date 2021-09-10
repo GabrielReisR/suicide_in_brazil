@@ -225,7 +225,37 @@ ym_variation <- ym_variation/stats::lag(ym_variation, -1) - 1
 
 ym_variation <- as.data.frame(ym_variation)
 
-# Visualizing demographics: sex ====
+# Visualizing demographics: suicide by sex ====
+suicide_by_sex <- 
+  
+  df %>% 
+  
+  filter(SEXO != 'NA') %>%
+  
+  # Plot
+  ggplot(aes(x = SEXO, fill = design$fill_color)) +
+  
+  # Geom
+  geom_bar() +
+  
+  # Y-axis: Limits and ticks
+  scale_y_continuous(breaks = c(0, 15000, 30000, 45000, 60000, 75000, 90000),
+                     limits = c(0, 90000)) +
+  
+  # Labels
+  labs(x = 'Sexo',
+       y = '',
+       title = 'Número de Suicídios Registrados por Sexo no Brasil',
+       caption = design$caption) +
+  
+  # Theme
+  design$project_theme + 
+  
+  theme(panel.grid.major.x = element_blank())
+
+suicide_by_sex
+
+# Visualizing demographics: sex by year ====
 sex_by_year <- 
   
   df %>% 

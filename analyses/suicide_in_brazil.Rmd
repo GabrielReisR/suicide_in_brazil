@@ -519,7 +519,7 @@ df %>%
   count()
 ```
 
-Observando-se o gif abaixo, percebe-se que a relação entre suicídios de homens 
+Observando o gif abaixo, percebe-se que a relação entre suicídios de homens 
 e mulheres se mostrou razoavelmente constante ao longo dos anos.
 ```{r, echo = FALSE, out.width = "75%", fig.align = 'center'}
 knitr::include_graphics("../figures/suicides_by_sex_by_year.gif")
@@ -545,8 +545,10 @@ dados do DATASUS é a orientação sexual, importante atravessamento relacionado
 ### Raça/cor
 Em relação à raça/cor, de acordo com a classificação do IBGE:
 
-* A maioria dos casos de suicídio atinge a população branca (51,29%).
-* Somando-se os percentuais da população preta (5,42%) e parda (41,80%),
+* A maioria dos casos de suicídio atinge a população autodeclarada branca 
+(51,29%).
+* Somando-se os percentuais da população autodeclarada preta (5,42%) e 
+autodeclarada parda (41,80%),
 tem-se que 47,22% dos casos atinge a população negra do Brasil.
 
 ```{r suicides_by_race, echo= FALSE}
@@ -859,8 +861,9 @@ ggplotly(suicides_by_place_of_occurence, tooltip = 'n')
 ### Suicídios por estados
 A maioria dos suicídios, em números brutos, ocorreram nas regiões Sul e Sudeste.
 Um problema de olhar para números brutos é ignorar números relativos a população
-do estado. Essa limitação não foi sanada nessa análise, que considerou apenas
-números brutos.
+do estado. Por isso, foi dividido o número de suicídios pelo número de
+habitantes de cada estado. Essa variável nova chamada "taxa de suicídios" foi
+utilizada para a criação do mapa abaixo.
 
 *Para entender os números relativos a cada estado, navegue com o mouse por cima*
 *do mapa abaixo.*
