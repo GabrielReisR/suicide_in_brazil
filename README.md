@@ -48,11 +48,12 @@ De forma geral, observou-se que:
 geral, o número bruto de suicídios vem aumentando ao longo dos anos.
 * Os meses de Dezembro, Outubro e Março, respectivamente, contaram com o maior
 número de casos de suicídio.
-* Ano após ano, homens (78,58%) cometeram mais suicídios do que as mulheres.
+* Ano após ano, homens (78,58%) morreram mais de suicídio do que as mulheres.
   * Não se tem dados estruturados sobre a população transgênero pelo DATASUS.
-* A população que comete suicídio é majoritariamente branca (51,29%). Além
-disso, somando-se os percentuais da população preta (5,42%) e parda (41,80%),
-tem-se que 47,22% dos casos atinge a população negra do Brasil.
+* A população que mais morre de suicídio é majoritariamente autodeclarada 
+branca (51,29%). Além disso, somando-se os percentuais da população
+autodeclarada preta (5,42%) e autodeclarada parda (41,80%), tem-se que 47,22% 
+dos casos atinge a população negra do Brasil.
 * Pessoas com ensino fundamental I completo ou ensino fundamental II incompleto
 somaram 32,35% dos casos de suicídio. Após isso, 30,77% dos casos de suicídio
 foram registrados em pessoas com ensino médio completo ou incompleto.

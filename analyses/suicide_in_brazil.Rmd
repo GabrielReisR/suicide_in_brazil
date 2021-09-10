@@ -506,9 +506,9 @@ final_df %<>% select(-data)
 final_df
 ```
 
-## Quem comete suicídio?
+## Quem morre por suicídio?
 ### Sexo
-Em geral, os homens cometem mais suicídios que as mulheres no Brasil. 
+Em geral, os homens morrem mais de suicídios que as mulheres no Brasil. 
 O número absoluto de suicídios registrados foi de 88394 para homens 
 (78,58%) e 24075 para mulheres (21,40%).
 
@@ -589,9 +589,9 @@ ggplotly(suicides_by_race, tooltip = 'n')
 
 ### Nível de escolaridade
 Realizando o recorte por anos de educação formal, o grupo que teve entre 4 a 7
-anos de educação foi o que mais cometeu suicídio, totalizando 32,35% dos casos.
-Esse grupo equivale às pessoas com ensino fundamental I completo ou ensino
-fundamental II incompleto.
+anos de educação foi o que mais morreu de suicídio, totalizando 32,35% dos 
+casos. Esse grupo equivale às pessoas com ensino fundamental I completo ou 
+ensino fundamental II incompleto.
 Em segundo lugar, as pessoas com ensino médio completo ou incompleto (8 a 11 
 anos de educação), totalizando 30,77% dos casos.
 
@@ -870,15 +870,16 @@ suicide_by_states <- estados %>%
   
   ggplot() +
   
-  geom_sf(aes(fill = n, group = abbrev_state), size = .15) +
+  geom_sf(aes(fill = taxa_suicidio, group = abbrev_state), size = .15) +
   
   scale_fill_gradient2(low = "white", high = design$fill_color,
-                       name = "",
-                       limits = c(0, 25000))  +
+                       name = "% de mortes por suicídio",
+                       limits = c(0, 0.111))  +
   
   labs(x = '',
        y = '',
-       title = "Número de Suicídos Registrados por Estado Brasileiro",
+       title = "Taxa de Suicídios de Acordo com a População de Cada Estado Brasileiro",
+       subtitle = "Número populacional retirado do último censo do IBGE.",
        caption  = design$caption) +
   
   theme(plot.caption = element_text(hjust = 0, face= "italic"),
@@ -1016,8 +1017,8 @@ ggplotly(suicides_surgery, tooltip = 'n')
 
 
 ## Resumo geral
-Esse trabalho buscou delinear características demográficas da população
-que cometeu suicídio entre os anos de 2010 e 2019 no Brasil.
+Esse trabalho buscou delinear características demográficas da população que 
+morreu de suicídio entre os anos de 2010 e 2019 no Brasil.
 
 De forma geral, observou-se que:
 
@@ -1025,11 +1026,12 @@ De forma geral, observou-se que:
 geral, o número bruto de suicídios vem aumentando ao longo dos anos.
 * Os meses de Dezembro, Outubro e Março, respectivamente, contaram com o maior
 número de casos de suicídio.
-* Ano após ano, homens (78,58%) cometeram mais suicídios do que as mulheres.
+* Ano após ano, homens (78,58%) morreram mais de suicídio do que as mulheres.
   * Não se tem dados estruturados sobre a população transgênero pelo DATASUS.
-* A população que comete suicídio é majoritariamente branca (51,29%). Além
-disso, somando-se os percentuais da população preta (5,42%) e parda (41,80%),
-tem-se que 47,22% dos casos atinge a população negra do Brasil.
+* A população que mais morre de suicídio é majoritariamente autodeclarada 
+branca (51,29%). Além disso, somando-se os percentuais da população
+autodeclarada preta (5,42%) e autodeclarada parda (41,80%), tem-se que 47,22% 
+dos casos atinge a população negra do Brasil.
 * Pessoas com ensino fundamental I completo ou ensino fundamental II incompleto
 somaram 32,35% dos casos de suicídio. Após isso, 30,77% dos casos de suicídio
 foram registrados em pessoas com ensino médio completo ou incompleto.
@@ -1059,7 +1061,9 @@ análises aqui descritas devem ser acompanhadas da referência a esse trabalho.
 
 Caso tenha errado em algum ponto ou me equivocado na breve explicação de algo,
 adoraria receber sugestões de melhoria desse documento. Você pode falar comigo
-através dos links presentes em <a href= "https://linktr.ee/gabrielrr" target= "_blank"></a>
+através dos links presentes em 
+<a href= "https://linktr.ee/gabrielrr" target= "_blank"></a>
 
 Gostou muito do trabalho e quer apoiar o tempo dedicado a ele?
-Se quiser, <a href="https://ko-fi.com/gabrielrr" target="_blank">você pode me pagar um café</a>.
+Se quiser, 
+<a href="https://ko-fi.com/gabrielrr" target="_blank">você pode me pagar um café</a>.

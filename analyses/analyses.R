@@ -59,7 +59,7 @@ create_design <- function(){
           axis.ticks.x = element_blank(),
           panel.border = element_blank(),
           plot.title = element_text(size = 16),
-          plot.subtitle = element_text(size = 15),
+          plot.subtitle = element_text(size = 14),
           axis.text = element_text(size = 12),
           axis.title = element_text(size = 14))
   
@@ -688,19 +688,43 @@ by_state <-
 estados <- estados %>% 
   left_join(by_state, by = c('abbrev_state' = 'estado'))
 
+habitantes_por_estado <- 
+  data.frame(
+    abbrev_state = c("AC", "AL", "AP", "AM", "BA",
+                     "CE", "DF", "ES", "GO", "MA", 
+                     "MT", "MS", "MG", "PA", "PB",
+                     "PR", "PE", "PI", "RJ", "RN",
+                     "RS", "RO", "RR", "SC", "SP",
+                     "SE", "TO"),
+    
+    pop_ibge = c(733559, 3120494, 669526, 3483985, 14016906,
+                 8452381, 2570160, 3514952, 6003788, 6574789,
+                 3035122, 2449024, 19597330, 7581051, 3766528,
+                 10444526, 8796448, 3118360, 15989929, 3168027,
+                 10693929, 1562409, 450479, 6248436, 41262199,
+                 2068017, 1383445)
+  )
+
+estados <- estados %>% 
+  left_join(habitantes_por_estado, by = 'abbrev_state')
+
+estados <- estados %>% 
+  mutate(taxa_suicidio = (n/pop_ibge)*100)
+
 suicide_by_states <- estados %>%
   
   ggplot() +
   
-  geom_sf(aes(fill = n, group = abbrev_state), size = .15) +
+  geom_sf(aes(fill = taxa_suicidio, group = abbrev_state), size = .15) +
   
   scale_fill_gradient2(low = "white", high = design$fill_color,
-                       name = "",
-                       limits = c(0, 25000))  +
+                       name = "% de mortes por suicídio",
+                       limits = c(0, 0.111))  +
   
   labs(x = '',
        y = '',
-       title = "Número de Suicídos Registrados por Estado Brasileiro",
+       title = "Taxa de Suicídios de Acordo com a População de Cada Estado Brasileiro",
+       subtitle = "Número populacional retirado do último censo do IBGE.",
        caption  = design$caption) +
   
   theme(plot.caption = element_text(hjust = 0, face= "italic"),
@@ -741,7 +765,7 @@ suicide_by_states_by_year <- estados %>%
        y = '',
        title = "Número de Suicídos Registrados por Estado Brasileiro",
        caption  = design$caption) +
-
+  
   theme(plot.caption = element_text(hjust = 0, face= "italic"),
         plot.title.position = "plot", 
         plot.caption.position =  "plot") +
