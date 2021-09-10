@@ -718,7 +718,7 @@ suicide_by_states <- estados %>%
   geom_sf(aes(fill = taxa_suicidio, group = abbrev_state), size = .15) +
   
   scale_fill_gradient2(low = "white", high = design$fill_color,
-                       name = "% de mortes por suicídio",
+                       name = "Proporção de suicídios\npor nº de habitantes",
                        limits = c(0, 0.111))  +
   
   labs(x = '',

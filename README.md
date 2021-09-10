@@ -70,6 +70,9 @@ casos).
 10 anos (n = 402), seguido por Amapá (n = 429) e Acre (n = 508).
 * São Paulo é o estado com maior número de registros de suicídio (n = 21970),
 seguido por Minas Gerais (n = 13541) e Rio Grande do Sul (n = 11860).
+* Os estados com maior proporção de suicídios por número de habitantes foram
+Rio Grande do Sul (0.111%), Santa Catarina (0.102%) e Mato Grosso do 
+Sul (0.093%).
 * A maioria dos casos de suicídio não receberam nem assistência médica nem
 cirurgia.
 

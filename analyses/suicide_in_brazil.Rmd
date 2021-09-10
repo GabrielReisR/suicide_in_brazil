@@ -1,7 +1,7 @@
 ---
 title: "Suicídio no Brasil - de 2010 a 2019"
 author: "Gabriel R. Rodrigues"
-date: "Última atualização: 11/05/2021"
+date: "Última atualização: 2021/Sep/10"
 output: 
   html_document:
     toc: true
@@ -507,7 +507,7 @@ final_df
 ```
 
 ## Quem morre por suicídio?
-### Sexo
+### Gênero
 Em geral, os homens morrem mais de suicídios que as mulheres no Brasil. 
 O número absoluto de suicídios registrados foi de 88394 para homens 
 (78,58%) e 24075 para mulheres (21,40%).
@@ -525,21 +525,22 @@ e mulheres se mostrou razoavelmente constante ao longo dos anos.
 knitr::include_graphics("../figures/suicides_by_sex_by_year.gif")
 ```
 
-**Importante**: a divisão entre homens e mulheres desconsidera questões envolvendo
-gênero, principalmente a cisgeneridade e transgeneridade. Especificamente sobre
-a base de dados DATASUS, não foi encontrada uma variável que especificasse 
-a identidade de gênero das pessoas registradas no sistema. Nesse sentido, há
-falta de informação qualificada sobre o suicídio de pessoas trans em uma das
-principais bases de dados pública em saúde do país. Em meio a essa dificuldade,
-a Associação Nacional de Travestis e Transsexuais 
+**Importante**: Na base de dados DATASUS, não foi encontrada uma variável que 
+pudesse especificar se a pessoa que morreu de suicídio se identificava como cis
+ou como trans. Nesse sentido, há falta de informação qualificada sobre o 
+suicídio de pessoas trans em uma das principais bases de dados pública em saúde
+do país. Em meio a essa dificuldade, a Associação Nacional de Travestis e 
+Transsexuais 
 (<a href="https://antrabrasil.org/" target="_blank">ANTRA</a>) publicou que 
-houve um aumento e 34% no número de suicídios de pessoas transgênero no Brasil
+houve um aumento e 34% no número de suicídios de pessoas trans no Brasil
 em 2020, quando comparado a 2019 
 (<a href= "https://www.uol.com.br/vivabem/noticias/redacao/2020/09/09/aumento-do-numero-de-suicidios-entre-populacao-trans-preocupa-ativistas.htm" target="_blank">link da reportagem</a>). Tais dados, 
 entretanto, foram baseados nos *casos alcançados* pela ANTRA. A falta de uma
 variável que codifique isso de forma acessível no DATASUS dificulta o mapeamento
-do suicídio de pessoas transgênero - que pode ser considerado um problema de
-saúde pública.
+do suicídio de pessoas trans - que pode ser considerado um problema de
+saúde pública. Outra importante variável que não é considerada pelo banco de
+dados do DATASUS é a orientação sexual, importante atravessamento relacionado
+à saúde mental.
 
 ### Raça/cor
 Em relação à raça/cor, de acordo com a classificação do IBGE:
@@ -809,7 +810,7 @@ df %>%
 ### Local de ocorrência
 Em relação à classificação do local de ocorrência, percebe-se que 
 
-* A maioria dos suicídios ocorrem nas próprias casas (60,89% dos casos).
+* A maioria dos suicídios ocorre nas próprias casas (60,89% dos casos).
 * 15,69% dos casos de suicídio ocorreram em Hospitais. Isso parece ser um fator
 de confusão: é possível que as mortes advindas de suicídio tenham ocorrido no
 hospital - por isso esse alto percentual de casos nesse local.
@@ -873,7 +874,7 @@ suicide_by_states <- estados %>%
   geom_sf(aes(fill = taxa_suicidio, group = abbrev_state), size = .15) +
   
   scale_fill_gradient2(low = "white", high = design$fill_color,
-                       name = "% de mortes por suicídio",
+                       name = "Proporção de suicídios\npor nº de habitantes",
                        limits = c(0, 0.111))  +
   
   labs(x = '',
@@ -910,6 +911,23 @@ Brasil - o mesmo poderia ser dito do Rio Grande do Sul.
 * Seguindo o mesmo raciocínio, São Paulo colaborou para aproximadamente 2 anos
 de casos de suicídio no Brasil. No geral, esses três estados registraram 42% de
 todos os casos de suicídio no Brasil nesses últimos 10 anos.
+
+Proporcionalmente ao número de habitantes (retirado de
+<a href="https://cidades.ibge.gov.br/brasil/df/panorama" target="_blank">IBGE</a>):
+
+* A menor taxa de suicídios foi no Rio de Janeiro, contabilizando 0.034% de
+pessoas que morreram por suicídio considerando o último censo do IBGE.
+
+* Seguindo o Rio de Janeiro está o estado de Pará (0.035%), Bahia (0.037%),
+e Alagoas (0.037%).
+
+* Os estados com maior proporção de suicídios por número de habitantes foram
+Rio Grande do Sul (0.111%), Santa Catarina (0.102%) e Mato Grosso do 
+Sul (0.093%).
+
+* Apesar de São Paulo possuir um maior número bruto de suicídios, quando
+controlado pelo número populacional do estado a taxa de suicídio de SP (0.059%) 
+se aproxima da média dos outros estados (0.063%).
 
 ```{r n_suicides_by_states, echo=F, message=F, warning=F, rows.print=27}
 as.data.frame(estados) %>% 
@@ -1048,6 +1066,9 @@ casos).
 10 anos (n = 402), seguido por Amapá (n = 429) e Acre (n = 508).
 * São Paulo é o estado com maior número de registros de suicídio (n = 21970),
 seguido por Minas Gerais (n = 13541) e Rio Grande do Sul (n = 11860).
+* Os estados com maior proporção de suicídios por número de habitantes foram
+Rio Grande do Sul (0.111%), Santa Catarina (0.102%) e Mato Grosso do 
+Sul (0.093%).
 * A maioria dos casos de suicídio não receberam nem assistência médica nem
 cirurgia.
 
