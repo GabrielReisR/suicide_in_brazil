@@ -1,0 +1,28 @@
+"","abrev_estado","estado","regiao","n","pop_ibge"
+"1","RO","Rondônia","Norte",995,1562409
+"2","AC","Acre","Norte",508,733559
+"3","AM","Amazônas","Norte",2145,3483985
+"4","RR","Roraima","Norte",402,450479
+"5","PA","Pará","Norte",2640,7581051
+"6","AP","Amapá","Norte",429,669526
+"7","TO","Tocantins","Norte",1030,1383445
+"8","MA","Maranhão","Nordeste",2676,6574789
+"9","PI","Piauí","Nordeste",2710,3118360
+"10","CE","Ceará","Nordeste",5805,8452381
+"11","RN","Rio Grande Do Norte","Nordeste",1733,3168027
+"12","PB","Paraíba","Nordeste",2009,3766528
+"13","PE","Pernambuco","Nordeste",3583,8796448
+"14","AL","Alagoas","Nordeste",1159,3120494
+"15","SE","Sergipe","Nordeste",1213,2068017
+"16","BA","Bahia","Nordeste",5142,14016906
+"17","MG","Minas Gerais","Sudeste",13541,19597330
+"18","ES","Espírito Santo","Sudeste",1899,3514952
+"19","RJ","Rio De Janeiro","Sudeste",5373,15989929
+"20","SP","São Paulo","Sudeste",21970,41262199
+"21","PR","Paraná","Sul",7252,10444526
+"22","SC","Santa Catarina","Sul",6349,6248436
+"23","RS","Rio Grande Do Sul","Sul",11860,10693929
+"24","MS","Mato Grosso Do Sul","Centro Oeste",2290,2449024
+"25","MT","Mato Grosso","Centro Oeste",1835,3035122
+"26","GO","Goiás","Centro Oeste",4453,6003788
+"27","DF","Distrito Federal","Centro Oeste",1490,2570160

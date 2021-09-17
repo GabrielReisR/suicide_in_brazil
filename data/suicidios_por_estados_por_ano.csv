@@ -1,0 +1,271 @@
+"","abrev_estado","estado","regiao","ano","n"
+"1","RO","Rondônia","Norte",2010,82
+"2","RO","Rondônia","Norte",2011,78
+"3","RO","Rondônia","Norte",2012,73
+"4","RO","Rondônia","Norte",2013,86
+"5","RO","Rondônia","Norte",2014,84
+"6","RO","Rondônia","Norte",2015,110
+"7","RO","Rondônia","Norte",2016,103
+"8","RO","Rondônia","Norte",2017,113
+"9","RO","Rondônia","Norte",2018,126
+"10","RO","Rondônia","Norte",2019,140
+"11","AC","Acre","Norte",2010,41
+"12","AC","Acre","Norte",2011,41
+"13","AC","Acre","Norte",2012,43
+"14","AC","Acre","Norte",2013,44
+"15","AC","Acre","Norte",2014,49
+"16","AC","Acre","Norte",2015,39
+"17","AC","Acre","Norte",2016,56
+"18","AC","Acre","Norte",2017,64
+"19","AC","Acre","Norte",2018,59
+"20","AC","Acre","Norte",2019,72
+"21","AM","Amazônas","Norte",2010,162
+"22","AM","Amazônas","Norte",2011,188
+"23","AM","Amazônas","Norte",2012,185
+"24","AM","Amazônas","Norte",2013,225
+"25","AM","Amazônas","Norte",2014,233
+"26","AM","Amazônas","Norte",2015,263
+"27","AM","Amazônas","Norte",2016,195
+"28","AM","Amazônas","Norte",2017,207
+"29","AM","Amazônas","Norte",2018,234
+"30","AM","Amazônas","Norte",2019,253
+"31","RR","Roraima","Norte",2010,34
+"32","RR","Roraima","Norte",2011,34
+"33","RR","Roraima","Norte",2012,38
+"34","RR","Roraima","Norte",2013,33
+"35","RR","Roraima","Norte",2014,15
+"36","RR","Roraima","Norte",2015,52
+"37","RR","Roraima","Norte",2016,59
+"38","RR","Roraima","Norte",2017,50
+"39","RR","Roraima","Norte",2018,37
+"40","RR","Roraima","Norte",2019,50
+"41","PA","Pará","Norte",2010,188
+"42","PA","Pará","Norte",2011,222
+"43","PA","Pará","Norte",2012,241
+"44","PA","Pará","Norte",2013,233
+"45","PA","Pará","Norte",2014,208
+"46","PA","Pará","Norte",2015,267
+"47","PA","Pará","Norte",2016,277
+"48","PA","Pará","Norte",2017,305
+"49","PA","Pará","Norte",2018,351
+"50","PA","Pará","Norte",2019,348
+"51","AP","Amapá","Norte",2010,30
+"52","AP","Amapá","Norte",2011,39
+"53","AP","Amapá","Norte",2012,21
+"54","AP","Amapá","Norte",2013,45
+"55","AP","Amapá","Norte",2014,34
+"56","AP","Amapá","Norte",2015,53
+"57","AP","Amapá","Norte",2016,36
+"58","AP","Amapá","Norte",2017,46
+"59","AP","Amapá","Norte",2018,62
+"60","AP","Amapá","Norte",2019,63
+"61","TO","Tocantins","Norte",2010,89
+"62","TO","Tocantins","Norte",2011,92
+"63","TO","Tocantins","Norte",2012,95
+"64","TO","Tocantins","Norte",2013,96
+"65","TO","Tocantins","Norte",2014,85
+"66","TO","Tocantins","Norte",2015,99
+"67","TO","Tocantins","Norte",2016,101
+"68","TO","Tocantins","Norte",2017,115
+"69","TO","Tocantins","Norte",2018,124
+"70","TO","Tocantins","Norte",2019,134
+"71","MA","Maranhão","Nordeste",2010,209
+"72","MA","Maranhão","Nordeste",2011,218
+"73","MA","Maranhão","Nordeste",2012,206
+"74","MA","Maranhão","Nordeste",2013,243
+"75","MA","Maranhão","Nordeste",2014,256
+"76","MA","Maranhão","Nordeste",2015,283
+"77","MA","Maranhão","Nordeste",2016,294
+"78","MA","Maranhão","Nordeste",2017,320
+"79","MA","Maranhão","Nordeste",2018,313
+"80","MA","Maranhão","Nordeste",2019,334
+"81","PI","Piauí","Nordeste",2010,201
+"82","PI","Piauí","Nordeste",2011,234
+"83","PI","Piauí","Nordeste",2012,235
+"84","PI","Piauí","Nordeste",2013,228
+"85","PI","Piauí","Nordeste",2014,244
+"86","PI","Piauí","Nordeste",2015,271
+"87","PI","Piauí","Nordeste",2016,321
+"88","PI","Piauí","Nordeste",2017,317
+"89","PI","Piauí","Nordeste",2018,331
+"90","PI","Piauí","Nordeste",2019,328
+"91","CE","Ceará","Nordeste",2010,488
+"92","CE","Ceará","Nordeste",2011,556
+"93","CE","Ceará","Nordeste",2012,511
+"94","CE","Ceará","Nordeste",2013,591
+"95","CE","Ceará","Nordeste",2014,568
+"96","CE","Ceará","Nordeste",2015,568
+"97","CE","Ceará","Nordeste",2016,591
+"98","CE","Ceará","Nordeste",2017,645
+"99","CE","Ceará","Nordeste",2018,657
+"100","CE","Ceará","Nordeste",2019,630
+"101","RN","Rio Grande Do Norte","Nordeste",2010,137
+"102","RN","Rio Grande Do Norte","Nordeste",2011,177
+"103","RN","Rio Grande Do Norte","Nordeste",2012,174
+"104","RN","Rio Grande Do Norte","Nordeste",2013,158
+"105","RN","Rio Grande Do Norte","Nordeste",2014,170
+"106","RN","Rio Grande Do Norte","Nordeste",2015,156
+"107","RN","Rio Grande Do Norte","Nordeste",2016,181
+"108","RN","Rio Grande Do Norte","Nordeste",2017,180
+"109","RN","Rio Grande Do Norte","Nordeste",2018,196
+"110","RN","Rio Grande Do Norte","Nordeste",2019,204
+"111","PB","Paraíba","Nordeste",2010,158
+"112","PB","Paraíba","Nordeste",2011,163
+"113","PB","Paraíba","Nordeste",2012,189
+"114","PB","Paraíba","Nordeste",2013,200
+"115","PB","Paraíba","Nordeste",2014,159
+"116","PB","Paraíba","Nordeste",2015,221
+"117","PB","Paraíba","Nordeste",2016,181
+"118","PB","Paraíba","Nordeste",2017,250
+"119","PB","Paraíba","Nordeste",2018,237
+"120","PB","Paraíba","Nordeste",2019,251
+"121","PE","Pernambuco","Nordeste",2010,285
+"122","PE","Pernambuco","Nordeste",2011,293
+"123","PE","Pernambuco","Nordeste",2012,334
+"124","PE","Pernambuco","Nordeste",2013,322
+"125","PE","Pernambuco","Nordeste",2014,326
+"126","PE","Pernambuco","Nordeste",2015,310
+"127","PE","Pernambuco","Nordeste",2016,399
+"128","PE","Pernambuco","Nordeste",2017,438
+"129","PE","Pernambuco","Nordeste",2018,433
+"130","PE","Pernambuco","Nordeste",2019,443
+"131","AL","Alagoas","Nordeste",2010,85
+"132","AL","Alagoas","Nordeste",2011,104
+"133","AL","Alagoas","Nordeste",2012,111
+"134","AL","Alagoas","Nordeste",2013,143
+"135","AL","Alagoas","Nordeste",2014,118
+"136","AL","Alagoas","Nordeste",2015,116
+"137","AL","Alagoas","Nordeste",2016,112
+"138","AL","Alagoas","Nordeste",2017,104
+"139","AL","Alagoas","Nordeste",2018,137
+"140","AL","Alagoas","Nordeste",2019,129
+"141","SE","Sergipe","Nordeste",2010,130
+"142","SE","Sergipe","Nordeste",2011,125
+"143","SE","Sergipe","Nordeste",2012,109
+"144","SE","Sergipe","Nordeste",2013,125
+"145","SE","Sergipe","Nordeste",2014,110
+"146","SE","Sergipe","Nordeste",2015,120
+"147","SE","Sergipe","Nordeste",2016,115
+"148","SE","Sergipe","Nordeste",2017,128
+"149","SE","Sergipe","Nordeste",2018,135
+"150","SE","Sergipe","Nordeste",2019,116
+"151","BA","Bahia","Nordeste",2010,432
+"152","BA","Bahia","Nordeste",2011,433
+"153","BA","Bahia","Nordeste",2012,479
+"154","BA","Bahia","Nordeste",2013,493
+"155","BA","Bahia","Nordeste",2014,449
+"156","BA","Bahia","Nordeste",2015,504
+"157","BA","Bahia","Nordeste",2016,532
+"158","BA","Bahia","Nordeste",2017,606
+"159","BA","Bahia","Nordeste",2018,564
+"160","BA","Bahia","Nordeste",2019,650
+"161","MG","Minas Gerais","Sudeste",2010,1103
+"162","MG","Minas Gerais","Sudeste",2011,1259
+"163","MG","Minas Gerais","Sudeste",2012,1265
+"164","MG","Minas Gerais","Sudeste",2013,1160
+"165","MG","Minas Gerais","Sudeste",2014,1359
+"166","MG","Minas Gerais","Sudeste",2015,1307
+"167","MG","Minas Gerais","Sudeste",2016,1303
+"168","MG","Minas Gerais","Sudeste",2017,1515
+"169","MG","Minas Gerais","Sudeste",2018,1533
+"170","MG","Minas Gerais","Sudeste",2019,1737
+"171","ES","Espírito Santo","Sudeste",2010,164
+"172","ES","Espírito Santo","Sudeste",2011,164
+"173","ES","Espírito Santo","Sudeste",2012,180
+"174","ES","Espírito Santo","Sudeste",2013,160
+"175","ES","Espírito Santo","Sudeste",2014,172
+"176","ES","Espírito Santo","Sudeste",2015,190
+"177","ES","Espírito Santo","Sudeste",2016,175
+"178","ES","Espírito Santo","Sudeste",2017,207
+"179","ES","Espírito Santo","Sudeste",2018,239
+"180","ES","Espírito Santo","Sudeste",2019,248
+"181","RJ","Rio De Janeiro","Sudeste",2010,512
+"182","RJ","Rio De Janeiro","Sudeste",2011,435
+"183","RJ","Rio De Janeiro","Sudeste",2012,466
+"184","RJ","Rio De Janeiro","Sudeste",2013,443
+"185","RJ","Rio De Janeiro","Sudeste",2014,523
+"186","RJ","Rio De Janeiro","Sudeste",2015,535
+"187","RJ","Rio De Janeiro","Sudeste",2016,573
+"188","RJ","Rio De Janeiro","Sudeste",2017,612
+"189","RJ","Rio De Janeiro","Sudeste",2018,701
+"190","RJ","Rio De Janeiro","Sudeste",2019,573
+"191","SP","São Paulo","Sudeste",2010,1969
+"192","SP","São Paulo","Sudeste",2011,2050
+"193","SP","São Paulo","Sudeste",2012,2100
+"194","SP","São Paulo","Sudeste",2013,2211
+"195","SP","São Paulo","Sudeste",2014,2237
+"196","SP","São Paulo","Sudeste",2015,2302
+"197","SP","São Paulo","Sudeste",2016,2200
+"198","SP","São Paulo","Sudeste",2017,2306
+"199","SP","São Paulo","Sudeste",2018,2211
+"200","SP","São Paulo","Sudeste",2019,2384
+"201","PR","Paraná","Sul",2010,593
+"202","PR","Paraná","Sul",2011,599
+"203","PR","Paraná","Sul",2012,636
+"204","PR","Paraná","Sul",2013,661
+"205","PR","Paraná","Sul",2014,626
+"206","PR","Paraná","Sul",2015,720
+"207","PR","Paraná","Sul",2016,767
+"208","PR","Paraná","Sul",2017,777
+"209","PR","Paraná","Sul",2018,921
+"210","PR","Paraná","Sul",2019,952
+"211","SC","Santa Catarina","Sul",2010,531
+"212","SC","Santa Catarina","Sul",2011,521
+"213","SC","Santa Catarina","Sul",2012,551
+"214","SC","Santa Catarina","Sul",2013,569
+"215","SC","Santa Catarina","Sul",2014,588
+"216","SC","Santa Catarina","Sul",2015,639
+"217","SC","Santa Catarina","Sul",2016,674
+"218","SC","Santa Catarina","Sul",2017,739
+"219","SC","Santa Catarina","Sul",2018,738
+"220","SC","Santa Catarina","Sul",2019,799
+"221","RS","Rio Grande Do Sul","Sul",2010,1037
+"222","RS","Rio Grande Do Sul","Sul",2011,1048
+"223","RS","Rio Grande Do Sul","Sul",2012,1182
+"224","RS","Rio Grande Do Sul","Sul",2013,1144
+"225","RS","Rio Grande Do Sul","Sul",2014,1113
+"226","RS","Rio Grande Do Sul","Sul",2015,1142
+"227","RS","Rio Grande Do Sul","Sul",2016,1173
+"228","RS","Rio Grande Do Sul","Sul",2017,1354
+"229","RS","Rio Grande Do Sul","Sul",2018,1241
+"230","RS","Rio Grande Do Sul","Sul",2019,1426
+"231","MS","Mato Grosso Do Sul","Centro Oeste",2010,188
+"232","MS","Mato Grosso Do Sul","Centro Oeste",2011,212
+"233","MS","Mato Grosso Do Sul","Centro Oeste",2012,213
+"234","MS","Mato Grosso Do Sul","Centro Oeste",2013,230
+"235","MS","Mato Grosso Do Sul","Centro Oeste",2014,204
+"236","MS","Mato Grosso Do Sul","Centro Oeste",2015,230
+"237","MS","Mato Grosso Do Sul","Centro Oeste",2016,223
+"238","MS","Mato Grosso Do Sul","Centro Oeste",2017,259
+"239","MS","Mato Grosso Do Sul","Centro Oeste",2018,268
+"240","MS","Mato Grosso Do Sul","Centro Oeste",2019,263
+"241","MT","Mato Grosso","Centro Oeste",2010,163
+"242","MT","Mato Grosso","Centro Oeste",2011,158
+"243","MT","Mato Grosso","Centro Oeste",2012,188
+"244","MT","Mato Grosso","Centro Oeste",2013,179
+"245","MT","Mato Grosso","Centro Oeste",2014,157
+"246","MT","Mato Grosso","Centro Oeste",2015,145
+"247","MT","Mato Grosso","Centro Oeste",2016,179
+"248","MT","Mato Grosso","Centro Oeste",2017,197
+"249","MT","Mato Grosso","Centro Oeste",2018,227
+"250","MT","Mato Grosso","Centro Oeste",2019,242
+"251","GO","Goiás","Centro Oeste",2010,317
+"252","GO","Goiás","Centro Oeste",2011,339
+"253","GO","Goiás","Centro Oeste",2012,405
+"254","GO","Goiás","Centro Oeste",2013,431
+"255","GO","Goiás","Centro Oeste",2014,458
+"256","GO","Goiás","Centro Oeste",2015,438
+"257","GO","Goiás","Centro Oeste",2016,482
+"258","GO","Goiás","Centro Oeste",2017,498
+"259","GO","Goiás","Centro Oeste",2018,501
+"260","GO","Goiás","Centro Oeste",2019,584
+"261","DF","Distrito Federal","Centro Oeste",2010,148
+"262","DF","Distrito Federal","Centro Oeste",2011,100
+"263","DF","Distrito Federal","Centro Oeste",2012,136
+"264","DF","Distrito Federal","Centro Oeste",2013,126
+"265","DF","Distrito Federal","Centro Oeste",2014,138
+"266","DF","Distrito Federal","Centro Oeste",2015,131
+"267","DF","Distrito Federal","Centro Oeste",2016,153
+"268","DF","Distrito Federal","Centro Oeste",2017,169
+"269","DF","Distrito Federal","Centro Oeste",2018,188
+"270","DF","Distrito Federal","Centro Oeste",2019,201
