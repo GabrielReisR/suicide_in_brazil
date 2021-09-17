@@ -1,5 +1,6 @@
 ## Suicídios no Brasil entre 2010 e 2019
 
+<a href="https://www.kaggle.com/psicodata/dados-de-suicidios-entre-2010-e-2019" target="_blank">**Kaggle Dataset**</a> |
 <a href="https://rpubs.com/reisrgabriel/761964" target="_blank">**RMarkdown**</a> |
 <a href="https://github.com/GabrielReisR/suicide_in_brazil/blob/main/analyses/analyses.R" target="_blank">**Código em R**</a> |
 <a href="https://github.com/GabrielReisR/suicide_in_brazil/blob/main/analyses/previsao_suicidios.ipynb" target="_blank">**Prevendo suicídios**</a>
